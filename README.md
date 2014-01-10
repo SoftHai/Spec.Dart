@@ -64,10 +64,15 @@ Feature: UserManagement - With this feature, user can have an account to protect
 HTML output example:
 [HTMLExample](https://github.com/SoftHai/Spec.Dart/blob/master/doc/img/ExampleHtmlOutput.png)
 
-Changelog
+Doc
 =========
 
 Coming soon
+
+Changelog
+=========
+
+See [here](https://github.com/SoftHai/Spec.Dart/blob/master/CHANGELOG.md)
 
 Roadmap
 =========

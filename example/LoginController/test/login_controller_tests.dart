@@ -1,4 +1,4 @@
-import 'package:SpecDart/spec_dart.dart';
+import 'package:spec_dart/spec_dart.dart';
 import 'package:unittest/unittest.dart';
 import '../login_controller.dart';
 
