@@ -1,6 +1,8 @@
 Spec.Dart
 =========
 
+[![Build Status](https://drone.io/github.com/SoftHai/Spec.Dart/status.png)](https://drone.io/github.com/SoftHai/Spec.Dart/latest)
+
 A BDD framework for testing dart applications
 
 Install
