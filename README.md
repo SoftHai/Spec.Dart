@@ -11,8 +11,11 @@ Coming soon
 Example
 =========
 ```dart
-// Change the language of your output (EN and DE are supported)
+// Change the language of your output (default EN) (EN and DE are supported)
 SpecContext.language = SpecLanguage.en;
+
+// Change the output formatter (default is console print) (Console and HTML are supported)
+SpecContext.output = new HtmlOutputFormatter((m) => print(m));
 
 // Create Features
 var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
@@ -39,7 +42,7 @@ story1.scenario("Login Test - Example Data")
 feature.run();
 ```
 
-The outpout looks like that:
+The outpout looks like that (Console output):
 ```
 -----------------------------------------------------------------------------------------
 Feature: UserManagement - With this feature, user can have an account to protect here data
@@ -58,6 +61,8 @@ Feature: UserManagement - With this feature, user can have an account to protect
         | Hero | Man | false | true |
 -----------------------------------------------------------------------------------------
 ```
+HTML output example:
+[HTMLExample](https://github.com/SoftHai/Spec.Dart/blob/master/doc/img/ExampleHtmlOutput.png)
 
 Changelog
 =========
