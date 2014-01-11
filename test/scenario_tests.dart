@@ -200,35 +200,18 @@ main([bool disableInit = false]) {
       
       scenario.run();
       
-      expect(formatter.output, 
+      expect(formatter.output.startsWith(
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
-             '  Than happens an exception: Exception(Expected: false  Actual: <true>)\n'
-             ' #0      SimpleConfiguration.onExpectFailure (package:unittest/src/simple_configuration.dart:137:7)\n'
-             '#1      _ExpectFailureHandler.fail (package:unittest/src/simple_configuration.dart:15:28)\n'
-             '#2      DefaultFailureHandler.failMatch (package:unittest/src/expect.dart:117:9)\n'
-             '#3      expect (package:unittest/src/expect.dart:75:29)\n'
-             '#4      main.<anonymous closure>.<anonymous closure>.<anonymous closure> (file:///C:/Projekt/Spec.Dart/test/scenario_tests.dart:199:75)\n'
-             '#5      _StepChainImpl._executeStep (package:spec_dart/src/steps.dart:63:43)\n'
-             '#6      _StepChainImpl.executeSteps (package:spec_dart/src/steps.dart:45:32)\n'
-             '#7      Scenario.run (package:spec_dart/src/scenario.dart:87:50)\n'
-             '#8      main.<anonymous closure>.<anonymous closure> (file:///C:/Projekt/Spec.Dart/test/scenario_tests.dart:201:19)\n'
-             '#9      _run.<anonymous closure> (package:unittest/src/test_case.dart:109:30)\n'
-             '#10     _Future._propagateToListeners.<anonymous closure> (dart:async/future_impl.dart:453)\n'
-             '#11     _rootRun (dart:async/zone.dart:683)\n'
-             '#12     _RootZone.run (dart:async/zone.dart:823)\n'
-             '#13     _Future._propagateToListeners (dart:async/future_impl.dart:445)\n'
-             '#14     _Future._complete (dart:async/future_impl.dart:303)\n'
-             '#15     _Future._asyncComplete.<anonymous closure> (dart:async/future_impl.dart:354)\n'
-             '#16     _asyncRunCallback (dart:async/schedule_microtask.dart:18)\n'
-             '#17     _createTimer.<anonymous closure> (dart:async-patch/timer_patch.dart:11)\n'
-             '#18     _Timer._createTimerHandler._handleTimeout (timer_impl.dart:151)\n'
-             '#19     _Timer._createTimerHandler.<anonymous closure> (timer_impl.dart:166)\n'
-             '#20     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:93)\n'
+             '  Than happens an exception: Exception(Expected: false  Actual: <true>)\n'), isTrue);
+      
+      // StackTrace is cut out because the file pathes are different local and BuildServer
+      
+      expect(formatter.output.endsWith(
              '\n'
              '-----------------------------------------------------------------------------------------\n'
              '\n'
-             '');
+             ''), isTrue);
     });
     
     setUp(() => formatter.Clear());
