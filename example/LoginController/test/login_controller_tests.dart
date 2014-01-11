@@ -35,10 +35,10 @@ void main() {
     ..given(text: "is a login controller", 
         func: (context) => context.data["ctrl"] =  new LoginController())
         
-    ..when(text: "a user insert invalid login data (user: [user] / password: [pw])", 
+    ..when(text: "a user insert login data (user: [user] / password: [pw])", 
            func: (context) => context.data["ctrl"].login(context.data["user"], context.data["pw"]))
               
-    ..than(text: "the user is not Logged in", 
+    ..than(text: "the user is perhaps Logged in", 
            func: (context) => expect(context.data["ctrl"].isLogin, context.data["successful"]))
   
     ..example([{ "user": "Soft", "pw": "Hai", "successful": true}, 

@@ -8,7 +8,22 @@ A BDD framework for testing dart applications
 Install
 =========
 
-Coming soon
+You can get Spec.Dart from the Dart Package Manager.<br/>
+**Get the Package**
+* Add the dependancy 'spec_dart' to your pubspec.yaml
+ * Via the DartEditor dialog
+ * By adding the following to the file:
+   ```
+   dependencies:
+       spec_dart: any
+   ```
+* Update your depandancies by running `pub install`
+
+**Use the Package**
+```dart
+import 'package:spec_dart/spec_dart.dart
+```
+
 
 Example
 =========
@@ -72,7 +87,10 @@ HTML output example:
 Doc
 =========
 
-Coming soon
+Here you can find the framework documentation:
+* [Spec.Dart](https://github.com/SoftHai/Spec.Dart/blob/master/doc/SpecDart.md)
+* [Translation](https://github.com/SoftHai/Spec.Dart/blob/master/doc/Translation.md)
+* [OutputFormatter](https://github.com/SoftHai/Spec.Dart/blob/master/doc/OutputFormatter.md)
 
 Changelog
 =========
@@ -82,4 +100,9 @@ See [here](https://github.com/SoftHai/Spec.Dart/blob/master/CHANGELOG.md)
 Roadmap
 =========
 
-Coming soon
+* Improving
+* Bugfixing
+
+**Stable Version**
+
+* New Feature
