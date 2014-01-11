@@ -48,7 +48,111 @@ main() {
     });
    
     setUp(() => formatter.Clear());
-    test("- Test - Feature with story and senario", () {
+    test("- Test - Feature with scenario", () {
+      var feature = new Feature("BDD", "BDD makes tests more readable");
+      var scenario = feature.scenario("This is readable")
+          ..given(text: "are some data", 
+                  func: (context) {
+                    context.data["data1"] = "data1";
+                    context.data["data2"] = "data2";
+                  })
+          ..when(text: "I change some data", 
+                 func: (context) {
+                   context.data["data1"] = "data5";
+                 })
+          ..than(text: "I check the changed data1", 
+                 func: (context) {
+                   expect(context.data["data1"], "data5");
+                   return true; 
+                 }).and(text: "I check the unchanged data2", 
+                        func: (context) {
+                          expect(context.data["data2"], "data2");
+                          return true;
+                        });
+      feature.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '  Scenario: This is readable\n'
+             '    Given are some data\n'
+             '    When I change some data\n'
+             '    Than I check the changed data1: true\n'
+             '      And I check the unchanged data2: true\n'
+             '\n'
+             '\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
+    test("- Test - Feature with sub feature", () {
+      var feature = new Feature("BDD", "BDD makes tests more readable");
+      var subFeature = feature.subFeature("Story", description: "A Story is a sub feature of BDD");
+      
+      feature.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '  Feature: Story - A Story is a sub feature of BDD\n'
+             '\n'
+             '\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
+    test("- Test - Feature with story, subfeature, scenario", () {
+      var feature = new Feature("BDD", "BDD makes tests more readable");
+      var story = feature.story("Testing", asA: "Tester", iWant: "readable tests", soThat: "I easy understand what the test are doing");
+      var subFeature = feature.subFeature("Story", description: "A Story is a sub feature of BDD");
+      var scenario = feature.scenario("This is readable")
+          ..given(text: "are some data", 
+                  func: (context) {
+                    context.data["data1"] = "data1";
+                    context.data["data2"] = "data2";
+                  })
+          ..when(text: "I change some data", 
+                 func: (context) {
+                   context.data["data1"] = "data5";
+                 })
+          ..than(text: "I check the changed data1", 
+                 func: (context) {
+                   expect(context.data["data1"], "data5");
+                   return true; 
+                 }).and(text: "I check the unchanged data2", 
+                        func: (context) {
+                          expect(context.data["data2"], "data2");
+                          return true;
+                        });
+      
+      feature.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '  Story: Testing\n'
+             '    As a Tester\n'
+             '    I want readable tests\n'
+             '    So that I easy understand what the test are doing\n'
+             '\n'
+             '\n'
+             '  Feature: Story - A Story is a sub feature of BDD\n'
+             '\n'
+             '  Scenario: This is readable\n'
+             '    Given are some data\n'
+             '    When I change some data\n'
+             '    Than I check the changed data1: true\n'
+             '      And I check the unchanged data2: true\n'
+             '\n'
+             '\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
+    test("- Test - Feature with story with senario", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var story = feature.story("Testing", asA: "Tester", iWant: "readable tests", soThat: "I easy understand what the test are doing");
       story.scenario("This is readable")
@@ -74,17 +178,17 @@ main() {
       
       expect(formatter.output, 
              '-----------------------------------------------------------------------------------------\n'
-             '    Feature: BDD - BDD makes tests more readable\n'
-             '      Story: Testing\n'
-             '        As a Tester\n'
-             '        I want readable tests\n'
-             '        So that I easy understand what the test are doing\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '  Story: Testing\n'
+             '    As a Tester\n'
+             '    I want readable tests\n'
+             '    So that I easy understand what the test are doing\n'
              '\n'
-             '        Scenario: This is readable\n'
-             '          Given are some data\n'
-             '          When I change some data\n'
-             '          Than I check the changed data1: true\n'
-             '            And I check the unchanged data2: true\n'
+             '    Scenario: This is readable\n'
+             '      Given are some data\n'
+             '      When I change some data\n'
+             '      Than I check the changed data1: true\n'
+             '        And I check the unchanged data2: true\n'
              '\n'
              '\n'
              '\n'

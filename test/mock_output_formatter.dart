@@ -7,6 +7,7 @@ class MockOutputFormatter extends OutputFormatter {
   
   void Clear() { 
     this._output = new StringBuffer();
+    this._currentIntent = "";
   }
   
   String _indent = "  ";

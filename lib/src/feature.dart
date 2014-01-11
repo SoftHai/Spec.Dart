@@ -15,7 +15,7 @@ class Feature implements Runables {
  
   Feature._fromParent(this.name, this.description, this._specContext);
   
-  Story subFeature(String name, {String description}) {
+  Feature subFeature(String name, {String description}) {
     var feature = new Feature._fromParent(name, description, new _SpecContextImpl._clone(this._specContext));
     
     this._childSpecs.add(feature);
@@ -48,10 +48,10 @@ class Feature implements Runables {
     SpecContext.output.writeSpec("${SpecContext.language.feature}",": ${this.name} - ${this.description}");
     SpecContext.output.incIntent();
     
-    for(var scenario in this._childSpecs)
+    for(var child in this._childSpecs)
     {
-      var scenarioResult = scenario.run(true);
-      result &= scenarioResult ? 1 : 0;
+      var childResult = child.run(true);
+      result &= childResult ? 1 : 0;
     }
     
     SpecContext.output.decIntent();

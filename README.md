@@ -23,17 +23,20 @@ SpecContext.output = new HtmlOutputFormatter((m) => print(m));
 var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
 
 // Create Stories of features
-var story1 = feature.story("Login", asA: "user", iWant: "to login/logoff to my account", soThat: "I can get access to my data");
+var story1 = feature.story("Login",
+                         asA: "user",
+                         iWant: "to login/logoff to my account",
+                         soThat: "I can get access to my data");
 
 // Create senarios which test the story
 story1.scenario("Login Test - Example Data")
     ..given(text: "is a login controller",
             func: (context) => context.data["ctrl"] =  new LoginController())
 
-    ..when(text: "a user insert invalid login data (user: [user] / password: [pw])",
+    ..when(text: "a user insert login data (user: [user] / password: [pw])",
            func: (context) => context.data["ctrl"].login(context.data["user"], context.data["pw"]))
 
-    ..than(text: "the user is not Logged in",
+    ..than(text: "the user is perhaps Logged in",
            func: (context) => expect(context.data["ctrl"].isLogin, context.data["successful"]))
 
     // Use Example data as Data-Driven-Tests
@@ -55,8 +58,8 @@ Feature: UserManagement - With this feature, user can have an account to protect
 
     Scenario: Login Test - Example Data
       Given is a login controller
-      When a user insert invalid login data (user: [user] / password: [pw])
-      Than the user is not Logged in
+      When a user insert login data (user: [user] / password: [pw])
+      Than the user is perhaps Logged in
       Example
         | user | pw | successful | TestResult |
         | Soft | Hai | true | true |

@@ -10,7 +10,7 @@ class Story  implements Runables {
   String iWant;
   String soThat;
   
-  Story(this.title, {this.asA, this.iWant, this.soThat});
+  Story(this.title, {this.asA, this.iWant, this.soThat}) : this._specContext = new _SpecContextImpl();
   
   Story._fromParent(this.title, this._specContext, this.asA, this.iWant, this.soThat);
   
@@ -41,7 +41,7 @@ class Story  implements Runables {
       result &= scenarioResult ? 1 : 0;
     }
     
-    SpecContext.output.incIntent();
+    SpecContext.output.decIntent();
     SpecContext.output.writeEmptyLine();
     
     if(!isSubUnit) SpecContext.output.SpecEnd();

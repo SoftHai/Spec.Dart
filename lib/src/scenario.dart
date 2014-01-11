@@ -42,9 +42,9 @@ class Scenario implements Runables {
     
     if(this._exampleData != null) {
       // Given
-      this._givenSteps.printSteps(SpecContext.language.given);
+      if (this._givenSteps != null) this._givenSteps.printSteps(SpecContext.language.given);
       // When
-      this._whenSteps.printSteps(SpecContext.language.when);
+      if (this._whenSteps != null) this._whenSteps.printSteps(SpecContext.language.when);
       // Than
       this._thanSteps.printSteps(SpecContext.language.than);
 
@@ -57,8 +57,8 @@ class Scenario implements Runables {
         var dataContext = new _SpecContextImpl._clone(this._specContext);
         dataContext.data.addAll(data);
         
-        this._givenSteps.executeSteps(SpecContext.language.given, dataContext, false, true);
-        this._whenSteps.executeSteps(SpecContext.language.when, dataContext, false, true);
+        if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, dataContext, false, true);
+        if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, dataContext, false, true);
         var dataResult = this._thanSteps.executeSteps(SpecContext.language.than, dataContext, true, true);
         result &= dataResult ? 1 : 0;
         results.add(dataResult);
@@ -77,16 +77,23 @@ class Scenario implements Runables {
     }
     else {
       // Given
-      this._givenSteps.executeSteps(SpecContext.language.given, this._specContext, false);
+      if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, this._specContext, false);
       
       // When
-      this._whenSteps.executeSteps(SpecContext.language.when, this._specContext, false);
+      if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, this._specContext, false);
       
       // Than
-      var result = this._thanSteps.executeSteps(SpecContext.language.than, this._specContext, true);
-      
-      SpecContext.output.writeEmptyLine();
-      return result;
+      if (this._thanSteps != null) {
+        var result = this._thanSteps.executeSteps(SpecContext.language.than, this._specContext, true);
+        
+        if(!isSubUnit) SpecContext.output.SpecEnd();
+        SpecContext.output.writeEmptyLine();
+        return result;
+      }
+      else {
+        if(!isSubUnit) SpecContext.output.SpecEnd();
+        return false;
+      }
     }
   }
   

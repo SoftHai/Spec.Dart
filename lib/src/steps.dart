@@ -81,7 +81,8 @@ class _StepChainImpl implements StepChain {
     else
     {
       if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
-      currentStep.func(context);
+      
+      if(currentStep.func != null) currentStep.func(context);
       
       return 1;
     }
