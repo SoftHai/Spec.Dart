@@ -81,6 +81,10 @@ Feature: UserManagement - With this feature, user can have an account to protect
         | user | pw | successful | TestResult |
         | Soft | Hai | true | true |
         | Hero | Man | false | true |
+
+Features: 0 of 1 are failed ()
+Stories: 0 of 1 are failed ()
+Scenarios: 0 of 1 are failed ()
 -----------------------------------------------------------------------------------------
 ```
 HTML output example:
