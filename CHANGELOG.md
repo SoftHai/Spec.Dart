@@ -17,3 +17,5 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 **Release date: *not release*
 
 - **(NEW)** Add Statistics
+- **(IMP)** #4: Add `setUp`/`tearDown` functions to each Spec-Object (`Feature`, `Story`, `Scenario`)
+- **(IMP)** #4: Add `exampleSetUp`/`exampleTearDown` functions to 'Scenario'
