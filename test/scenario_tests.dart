@@ -25,6 +25,9 @@ main([bool disableInit = false]) {
       expect(formatter.output, 
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -40,6 +43,9 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  Given is something\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -55,6 +61,9 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  Given is nothing\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -68,12 +77,15 @@ main([bool disableInit = false]) {
       scenario.run();
       
       expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Scenario: Scenario Title\n'
-             '  Given is something\n'
-             '    And something else\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+          '-----------------------------------------------------------------------------------------\n'
+          'Scenario: Scenario Title\n'
+          '  Given is something\n'
+          '    And something else\n'
+          'Features: 0 of 0 are failed\n'
+          'Stories: 0 of 0 are failed\n'
+          'Scenarios: 1 of 1 are failed\n'
+          '-----------------------------------------------------------------------------------------\n'
+          '');
     });
     
     setUp(() => formatter.Clear());
@@ -91,6 +103,9 @@ main([bool disableInit = false]) {
              '  Given is something\n'
              '    And something more\n'
              '    And more\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -106,6 +121,9 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  When something happens\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -121,6 +139,9 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  When nothing happens\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -138,6 +159,9 @@ main([bool disableInit = false]) {
              'Scenario: Scenario Title\n'
              '  When something happens\n'
              '    And more happens\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -157,6 +181,9 @@ main([bool disableInit = false]) {
              '  When something happens\n'
              '    And more happens\n'
              '    And more more more\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -172,8 +199,10 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  Than happens something special: null\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 0 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
-             '\n'
              '');
     });
     
@@ -188,8 +217,10 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  Than happens an exception: Exception(Demo Exception)\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
-             '\n'
              '');
     });
     
@@ -199,7 +230,7 @@ main([bool disableInit = false]) {
       scenario.than(text: "happens an exception", func: (context) =>expect(true, isFalse));
       
       scenario.run();
-      
+            
       expect(formatter.output.startsWith(
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
@@ -208,10 +239,11 @@ main([bool disableInit = false]) {
       // StackTrace is cut out because the file pathes are different local and BuildServer
       
       expect(formatter.output.endsWith(
-             '\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '\n'
-             ''), isTrue);
+          'Features: 0 of 0 are failed\n'
+          'Stories: 0 of 0 are failed\n'
+          'Scenarios: 1 of 1 are failed\n'
+          '-----------------------------------------------------------------------------------------\n'
+          ''), isTrue);
     });
     
     setUp(() => formatter.Clear());
@@ -227,8 +259,10 @@ main([bool disableInit = false]) {
              'Scenario: Scenario Title\n'
              '  Than happens something special: false\n'
              '    And more special: true\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
-             '\n'
              '');
     });
     
@@ -249,6 +283,9 @@ main([bool disableInit = false]) {
              '    | Data1 | Data2 | Expected | TestResult |\n'
              '    | 1 | 2 | true | true |\n'
              '    | 3 | 4 | false | false |\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 1 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });

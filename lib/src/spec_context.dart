@@ -12,6 +12,7 @@ abstract class SpecContext {
 // Hidden implementation
 class _SpecContextImpl implements SpecContext {
 
+  _SpecStatistics statistics = new _SpecStatistics();
   Map<String, dynamic> data = new Map<String, dynamic>();
   
   _SpecContextImpl();

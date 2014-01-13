@@ -3,6 +3,7 @@ library softhai.spec_dart;
 import 'package:unittest/unittest.dart';
 
 part 'src/spec_context.dart';
+part 'src/spec_statistics.dart';
 part 'src/spec_language.dart';
 part 'src/output_formatter.dart';
 

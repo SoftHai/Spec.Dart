@@ -19,11 +19,14 @@ main() {
       feature.run();
       
       expect(formatter.output, 
-        '-----------------------------------------------------------------------------------------\n'
-        'Feature: BDD - BDD makes tests more readable\n'
-        '\n'
-        '-----------------------------------------------------------------------------------------\n'
-        '');
+             '-----------------------------------------------------------------------------------------\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '\n'
+             'Features: 0 of 1 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 0 of 0 are failed\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
     });
     
     setUp(() => formatter.Clear());
@@ -34,17 +37,20 @@ main() {
       feature.run();
       
       expect(formatter.output, 
-         '-----------------------------------------------------------------------------------------\n'
-         'Feature: BDD - BDD makes tests more readable\n'
-         '  Story: Testing\n'
-         '    As a Tester\n'
-         '    I want readable tests\n'
-         '    So that I easy understand what the test are doing\n'
-         '\n'
-         '\n'
-         '\n'
-         '-----------------------------------------------------------------------------------------\n'
-        '');
+             '-----------------------------------------------------------------------------------------\n'
+             'Feature: BDD - BDD makes tests more readable\n'
+             '  Story: Testing\n'
+             '    As a Tester\n'
+             '    I want readable tests\n'
+             '    So that I easy understand what the test are doing\n'
+             '\n'
+             '\n'
+             '\n'
+             'Features: 0 of 1 are failed\n'
+             'Stories: 0 of 1 are failed\n'
+             'Scenarios: 0 of 0 are failed\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
     });
    
     setUp(() => formatter.Clear());
@@ -80,7 +86,9 @@ main() {
              '    Than I check the changed data1: true\n'
              '      And I check the unchanged data2: true\n'
              '\n'
-             '\n'
+             'Features: 0 of 1 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 0 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -98,6 +106,9 @@ main() {
              '  Feature: Story - A Story is a sub feature of BDD\n'
              '\n'
              '\n'
+             'Features: 0 of 2 are failed\n'
+             'Stories: 0 of 0 are failed\n'
+             'Scenarios: 0 of 0 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -146,7 +157,9 @@ main() {
              '    Than I check the changed data1: true\n'
              '      And I check the unchanged data2: true\n'
              '\n'
-             '\n'
+             'Features: 0 of 2 are failed\n'
+             'Stories: 0 of 1 are failed\n'
+             'Scenarios: 0 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -191,7 +204,9 @@ main() {
              '        And I check the unchanged data2: true\n'
              '\n'
              '\n'
-             '\n'
+             'Features: 0 of 1 are failed\n'
+             'Stories: 0 of 1 are failed\n'
+             'Scenarios: 0 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });

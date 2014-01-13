@@ -34,6 +34,9 @@ main([disableInit = false]) {
              '  So that I fast understand what they doing\n'
              '\n'
              '\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 1 are failed\n'
+             'Scenarios: 0 of 0 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
@@ -75,7 +78,9 @@ main([disableInit = false]) {
              '    Than I check the changed data1: true\n'
              '      And I check the unchanged data2: true\n'
              '\n'
-             '\n'
+             'Features: 0 of 0 are failed\n'
+             'Stories: 0 of 1 are failed\n'
+             'Scenarios: 0 of 1 are failed\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
     });

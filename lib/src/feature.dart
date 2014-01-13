@@ -41,7 +41,10 @@ class Feature implements Runables {
   
   bool run([bool isSubUnit = false]) {
     
-    if(!isSubUnit) SpecContext.output.SpecStart();
+    if(!isSubUnit) {
+      SpecContext.output.SpecStart();
+      _SpecStatistics.Clear();
+    }
     
     var result = 1;
 
@@ -53,11 +56,18 @@ class Feature implements Runables {
       var childResult = child.run(true);
       result &= childResult ? 1 : 0;
     }
-    
+        
     SpecContext.output.decIntent();
     SpecContext.output.writeEmptyLine();
     
-    if(!isSubUnit) SpecContext.output.SpecEnd();
+    var stat = new _SpecStatistics.current();
+    stat.executedFeatures++;
+    if(result == 0) stat.failedFeatures++;
+    
+    if(!isSubUnit) {
+      SpecContext.output.writeMessage(stat.toString(), OutputFormatter.MESSAGE_TYPE_NONE);
+      SpecContext.output.SpecEnd();
+    }
     
     return result == 1 ? true : false;
   }

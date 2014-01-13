@@ -5,6 +5,8 @@ Spec.Dart
 
 A BDD framework for testing dart applications
 
+[Spec.Dart on Dart Package Manager](http://pub.dartlang.org/packages/spec_dart)
+
 Install
 =========
 

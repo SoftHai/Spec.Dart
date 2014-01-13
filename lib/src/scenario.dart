@@ -36,10 +36,14 @@ class Scenario implements Runables {
   
   bool run([bool isSubUnit = false]) {
     
-    if(!isSubUnit) SpecContext.output.SpecStart();
+    if(!isSubUnit) {
+      SpecContext.output.SpecStart();
+      _SpecStatistics.Clear();
+    }
     
     SpecContext.output.writeSpec("${SpecContext.language.scenario}", ": ${this.title}");
     
+    var runResult = false;
     if(this._exampleData != null) {
       // Given
       if (this._givenSteps != null) this._givenSteps.printSteps(SpecContext.language.given);
@@ -71,9 +75,7 @@ class Scenario implements Runables {
       SpecContext.output.decIntent();
       SpecContext.output.decIntent();
       
-      if(!isSubUnit) SpecContext.output.SpecEnd();
-      
-      return result == 1 ? true : false;
+      runResult = result == 1 ? true : false;
     }
     else {
       // Given
@@ -84,17 +86,21 @@ class Scenario implements Runables {
       
       // Than
       if (this._thanSteps != null) {
-        var result = this._thanSteps.executeSteps(SpecContext.language.than, this._specContext, true);
-        
-        if(!isSubUnit) SpecContext.output.SpecEnd();
-        SpecContext.output.writeEmptyLine();
-        return result;
+        runResult = this._thanSteps.executeSteps(SpecContext.language.than, this._specContext, true);
       }
-      else {
-        if(!isSubUnit) SpecContext.output.SpecEnd();
-        return false;
-      }
+     
     }
+    
+    var stat = new _SpecStatistics.current();
+    stat.executedScenarios++;
+    if(!runResult) stat.failedScenarios++;
+    
+    if(!isSubUnit) {
+      SpecContext.output.writeMessage(stat.toString(), OutputFormatter.MESSAGE_TYPE_NONE);
+      SpecContext.output.SpecEnd();
+    }
+    
+    return runResult;
   }
   
 }
