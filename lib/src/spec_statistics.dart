@@ -1,34 +1,33 @@
 part of softhai.spec_dart;
 
 
-class _SpecStatistics {
+class SpecStatistics {
   
-  static _SpecStatistics _current;
+  static SpecStatistics _current;
   
   int executedFeatures = 0;
   int failedFeatures = 0;
+  List<String> failedFeatureNames = new List<String>();
+  
   int executedStories = 0;
   int failedStories = 0;
+  List<String> failedStoryNames = new List<String>();
+  
   int executedScenarios = 0;
   int failedScenarios = 0;
+  List<String> failedScenarioNames = new List<String>();
   
-  _SpecStatistics();
+  SpecStatistics();
   
   static void Clear() {
-    _current = new _SpecStatistics();
+    _current = new SpecStatistics();
   }
   
-  factory _SpecStatistics.current() {
+  factory SpecStatistics.current() {
     if(_current == null) {
-      _current = new _SpecStatistics();
+      _current = new SpecStatistics();
     }
     
     return _current;
-  }
-  
-  String toString() {
-    return "Features: ${this.failedFeatures} of ${this.executedFeatures} are failed\n"
-           "Stories: ${this.failedStories} of ${this.executedStories} are failed\n"
-           "Scenarios: ${this.failedScenarios} of ${this.executedScenarios} are failed";
   }
 }

@@ -26,7 +26,7 @@ class Story  implements Runables {
 
     if(!isSubUnit) {
       SpecContext.output.SpecStart();
-      _SpecStatistics.Clear();
+      SpecStatistics.Clear();
     }
     
     var result = 1;
@@ -47,12 +47,15 @@ class Story  implements Runables {
     SpecContext.output.decIntent();
     SpecContext.output.writeEmptyLine();
     
-    var stat = new _SpecStatistics.current();
+    var stat = new SpecStatistics.current();
     stat.executedStories++;
-    if(result == 0) stat.failedStories++;
+    if(result == 0) {
+      stat.failedStories++;
+      stat.failedStoryNames.add(this.title);
+    }
     
     if(!isSubUnit) {
-      SpecContext.output.writeMessage(stat.toString(), OutputFormatter.MESSAGE_TYPE_NONE);
+      SpecContext.output.writeStatistics(stat);
       SpecContext.output.SpecEnd();
     }
     

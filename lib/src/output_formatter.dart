@@ -17,6 +17,7 @@ abstract class OutputFormatter {
   void writeMessage(String message, [String type = MESSAGE_TYPE_NONE]);
   void writeSpec(String keyword, String message, [String type = MESSAGE_TYPE_NONE]);
   void writeExampleData(List<Map<String, Object>> data, List<Object> results);
+  void writeStatistics(SpecStatistics statistics);
 }
 
 class ConsoleOutputFormatter implements OutputFormatter {
@@ -68,6 +69,12 @@ class ConsoleOutputFormatter implements OutputFormatter {
       print(_currentIntent + row);
     }
     
+  }
+  
+  void writeStatistics(SpecStatistics statistics) {
+    print("Features: ${statistics.failedFeatures} of ${statistics.executedFeatures} are failed (${statistics.failedFeatureNames.join(",")})\n"
+          "Stories: ${statistics.failedStories} of ${statistics.executedStories} are failed (${statistics.failedStoryNames.join(",")})\n"
+          "Scenarios: ${statistics.failedScenarios} of ${statistics.executedScenarios} are failed (${statistics.failedScenarioNames.join(",")})");
   }
   
 }
@@ -171,8 +178,39 @@ class HtmlOutputFormatter implements OutputFormatter {
       this._content.writeln("</tr>");
     }
     
-    this._content.writeln("</tbody><table>");
+    this._content.writeln("</tbody></table>");
     
+  }
+  
+  void writeStatistics(SpecStatistics statistics) {
+    
+    this._content.writeln("<br><br><br>");
+    this._content.writeln("<h3>Summary:</h3>");
+    
+    var featureClass = statistics.failedFeatures > 0 ? "failure" : "success";
+    var storyClass = statistics.failedStories > 0 ? "failure" : "success";
+    var scenarioClass = statistics.failedScenarios > 0 ? "failure" : "success";
+    
+    this._content.writeln("<div class='$featureClass'>Features: ${statistics.failedFeatures} of ${statistics.executedFeatures} are failed</div>");
+    if(statistics.failedFeatures > 0) {
+      this._content.writeln("<ul>");
+      statistics.failedFeatureNames.forEach((name) => this._content.writeln("<li>$name</li>"));
+      this._content.writeln("</ul>");
+    }
+    this._content.writeln("<hr>");
+    this._content.writeln("<div class='$storyClass'>Stories: ${statistics.failedStories} of ${statistics.executedStories} are failed</div>");
+    if(statistics.failedFeatures > 0) {
+      this._content.writeln("<ul>");
+      statistics.failedStoryNames.forEach((name) => this._content.writeln("<li>$name</li>"));
+      this._content.writeln("</ul>");
+    }
+    this._content.writeln("<hr>");
+    this._content.writeln("<div class='$storyClass'>Scenarios: ${statistics.failedScenarios} of ${statistics.executedScenarios} are failed</div>");
+    if(statistics.failedFeatures > 0) {
+      this._content.writeln("<ul>");
+      statistics.failedScenarioNames.forEach((name) => this._content.writeln("<li>$name</li>"));
+      this._content.writeln("</ul>");
+    }
   }
   
   void _addIntents()

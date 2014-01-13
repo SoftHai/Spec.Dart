@@ -59,4 +59,10 @@ class MockOutputFormatter extends OutputFormatter {
     
   }
   
+  void writeStatistics(SpecStatistics statistics) {
+    this._output.writeln("Features: ${statistics.failedFeatures} of ${statistics.executedFeatures} are failed (${statistics.failedFeatureNames.join(",")})\n"
+          "Stories: ${statistics.failedStories} of ${statistics.executedStories} are failed (${statistics.failedStoryNames.join(",")})\n"
+          "Scenarios: ${statistics.failedScenarios} of ${statistics.executedScenarios} are failed (${statistics.failedScenarioNames.join(",")})");
+  }
+  
 }

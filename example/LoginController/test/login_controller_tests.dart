@@ -5,7 +5,7 @@ import '../login_controller.dart';
 void main() {
   
   SpecContext.language = SpecLanguage.en; // EN is default, just to demonstrate how to change the language 
-  //SpecContext.output = new HtmlOutputFormatter((m) => print(m));
+  SpecContext.output = new HtmlOutputFormatter((m) => print(m));
   
   var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
   

@@ -38,7 +38,7 @@ class Scenario implements Runables {
     
     if(!isSubUnit) {
       SpecContext.output.SpecStart();
-      _SpecStatistics.Clear();
+      SpecStatistics.Clear();
     }
     
     SpecContext.output.writeSpec("${SpecContext.language.scenario}", ": ${this.title}");
@@ -91,12 +91,15 @@ class Scenario implements Runables {
      
     }
     
-    var stat = new _SpecStatistics.current();
+    var stat = new SpecStatistics.current();
     stat.executedScenarios++;
-    if(!runResult) stat.failedScenarios++;
+    if(!runResult)  {
+      stat.failedScenarios++;
+      stat.failedScenarioNames.add(this.title);
+    }
     
     if(!isSubUnit) {
-      SpecContext.output.writeMessage(stat.toString(), OutputFormatter.MESSAGE_TYPE_NONE);
+      SpecContext.output.writeStatistics(stat);
       SpecContext.output.SpecEnd();
     }
     
