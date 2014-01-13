@@ -42,6 +42,31 @@ main([disableInit = false]) {
     });
     
     setUp(() => formatter.Clear());
+    test("- Test - SetUp / TearDown", () {
+      var story = new Story("Story of tests", asA: "Tester", iWant: "Readable tests", soThat: "I fast understand what they doing");
+      story.setUp((context) => SpecContext.output.writeMessage("SETUP"));
+      story.tearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
+      
+      story.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'SETUP\n'
+             'Story: Story of tests\n'
+             '  As a Tester\n'
+             '  I want Readable tests\n'
+             '  So that I fast understand what they doing\n'
+             '\n'
+             '\n'
+             'TEARDOWN\n'
+             'Features: 0 of 0 are failed ()\n'
+             'Stories: 0 of 1 are failed ()\n'
+             'Scenarios: 0 of 0 are failed ()\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
     test("- Test - Story with senario", () {
       var story = new Story("Story of tests", asA: "Tester", iWant: "Readable tests", soThat: "I fast understand what they doing");
       story.scenario("This is readable")

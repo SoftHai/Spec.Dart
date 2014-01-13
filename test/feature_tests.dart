@@ -28,6 +28,27 @@ main() {
              '-----------------------------------------------------------------------------------------\n'
              '');
     });
+      
+    setUp(() => formatter.Clear());
+    test("- Test - SetUp / TearDown", () {
+      var feature = new Feature("BDD", "BDD makes tests more readable");
+      feature.setUp((context) => SpecContext.output.writeMessage("SETUP"));
+      feature.tearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
+      
+      feature.run();
+      
+      expect(formatter.output, 
+          '-----------------------------------------------------------------------------------------\n'
+          'SETUP\n'
+          'Feature: BDD - BDD makes tests more readable\n'
+          '\n'
+          'TEARDOWN\n'
+          'Features: 0 of 1 are failed ()\n'
+          'Stories: 0 of 0 are failed ()\n'
+          'Scenarios: 0 of 0 are failed ()\n'
+          '-----------------------------------------------------------------------------------------\n'
+      '');
+    });
     
     setUp(() => formatter.Clear());
     test("- Test - Feature with story", () {

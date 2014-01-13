@@ -1,31 +1,29 @@
 part of softhai.spec_dart;
 
-class Scenario implements Runables {
+class Scenario extends SpecBase {
     
   _StepChainImpl _givenSteps;
   _StepChainImpl _whenSteps;
   _StepChainImpl _thanSteps;
   List<Map<String, Object>> _exampleData;
-  _SpecContextImpl _specContext;
-  
+  SpecFunc _exampleSetUp;
+  SpecFunc _exampleTearDown;
   
   String title;
   
-  Scenario(this.title) : this._specContext = new _SpecContextImpl();
+  Scenario(this.title) : super();
   
-  Scenario._fromParent(this.title, this._specContext);
-  
-  StepChain given({String text, StepFunc func}) {
+  StepChain given({String text, SpecFunc func}) {
     this._givenSteps = new _StepChainImpl(new _Step(func, text));
     return this._givenSteps;
   }
 
-  StepChain when({String text, StepFunc func}) {
+  StepChain when({String text, SpecFunc func}) {
     this._whenSteps = new _StepChainImpl(new _Step(func, text));
     return this._whenSteps;
   }
   
-  StepChain than({String text, StepFunc func}) {
+  StepChain than({String text, SpecFunc func}) {
     this._thanSteps = new _StepChainImpl(new _Step(func, text));
     return this._thanSteps;
   }
@@ -34,12 +32,15 @@ class Scenario implements Runables {
     this._exampleData = data;
   }
   
-  bool run([bool isSubUnit = false]) {
-    
-    if(!isSubUnit) {
-      SpecContext.output.SpecStart();
-      SpecStatistics.Clear();
-    }
+  void exampleSetUp(SpecFunc func) {
+    this._exampleSetUp = func;
+  }
+  
+  void exampleTearDown(SpecFunc func) {
+    this._exampleTearDown = func;
+  }
+  
+  bool _internalRun(_SpecContextImpl context) {
     
     SpecContext.output.writeSpec("${SpecContext.language.scenario}", ": ${this.title}");
     
@@ -58,14 +59,23 @@ class Scenario implements Runables {
       
       for(var data in this._exampleData)
       {
-        var dataContext = new _SpecContextImpl._clone(this._specContext);
-        dataContext.data.addAll(data);
+        var contextCopy = new _SpecContextImpl._clone(context);
         
-        if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, dataContext, false, true);
-        if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, dataContext, false, true);
-        var dataResult = this._thanSteps.executeSteps(SpecContext.language.than, dataContext, true, true);
+        if(this._exampleSetUp != null) {
+          this._exampleSetUp(contextCopy);
+        }
+
+        contextCopy.data.addAll(data);
+        
+        if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, contextCopy, false, true);
+        if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, false, true);
+        var dataResult = this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true);
         result &= dataResult ? 1 : 0;
         results.add(dataResult);
+        
+        if(this._exampleTearDown != null) {
+          this._exampleTearDown(contextCopy);
+        }
       }
       
       SpecContext.output.incIntent();
@@ -79,14 +89,14 @@ class Scenario implements Runables {
     }
     else {
       // Given
-      if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, this._specContext, false);
+      if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, context, false);
       
       // When
-      if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, this._specContext, false);
+      if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, context, false);
       
       // Than
       if (this._thanSteps != null) {
-        runResult = this._thanSteps.executeSteps(SpecContext.language.than, this._specContext, true);
+        runResult = this._thanSteps.executeSteps(SpecContext.language.than, context, true);
       }
      
     }
@@ -96,11 +106,6 @@ class Scenario implements Runables {
     if(!runResult)  {
       stat.failedScenarios++;
       stat.failedScenarioNames.add(this.title);
-    }
-    
-    if(!isSubUnit) {
-      SpecContext.output.writeStatistics(stat);
-      SpecContext.output.SpecEnd();
     }
     
     return runResult;

@@ -1,10 +1,10 @@
 part of softhai.spec_dart;
 
-typedef bool StepFunc(SpecContext context);
+typedef bool SpecFunc(SpecContext context);
 
 abstract class StepChain {
   
-  StepChain and({String text, StepFunc func});
+  StepChain and({String text, SpecFunc func});
 }
 
 class _StepChainImpl implements StepChain {
@@ -15,7 +15,7 @@ class _StepChainImpl implements StepChain {
     this._steps.add(initStep);
   }
   
-  StepChain and({String text, StepFunc func}) {
+  StepChain and({String text, SpecFunc func}) {
     this._steps.add(new _Step(func, text));
     return this;
   }
@@ -92,7 +92,7 @@ class _StepChainImpl implements StepChain {
 class _Step {
   
   String text; 
-  StepFunc func;
+  SpecFunc func;
   
   _Step(this.func, this.text);
   

@@ -5,9 +5,18 @@ import '../login_controller.dart';
 void main() {
   
   SpecContext.language = SpecLanguage.en; // EN is default, just to demonstrate how to change the language 
-  SpecContext.output = new HtmlOutputFormatter((m) => print(m));
+  //SpecContext.output = new HtmlOutputFormatter((m) => print(m));
   
   var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
+  feature.setUp((context) {
+    // SetUp e.g. some expensive database objects
+    // print("SetUp Feature");
+  });
+  
+  feature.tearDown((context) {
+    // TearDown e.g. some resources (e.g. Databasde connection close)
+    // print("TearDown Feature");
+  });
   
   var story1 = feature.story("Login", asA: "user", iWant: "to login/logoff to my account", soThat: "I can get access to my data");
   

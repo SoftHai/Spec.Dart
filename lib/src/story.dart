@@ -1,8 +1,7 @@
 part of softhai.spec_dart;
 
-class Story  implements Runables {
+class Story  extends SpecBase {
   
-  _SpecContextImpl _specContext;
   List<Scenario> _scenarios = new List<Scenario>();
   
   String title;
@@ -10,24 +9,17 @@ class Story  implements Runables {
   String iWant;
   String soThat;
   
-  Story(this.title, {this.asA, this.iWant, this.soThat}) : this._specContext = new _SpecContextImpl();
-  
-  Story._fromParent(this.title, this._specContext, this.asA, this.iWant, this.soThat);
+  Story(this.title, {this.asA, this.iWant, this.soThat}) : super();
   
   Scenario scenario(String title) {
-    var scenario = new Scenario._fromParent(title, new _SpecContextImpl._clone(this._specContext));
+    var scenario = new Scenario(title);
     
     this._scenarios.add(scenario);
     
     return scenario;
   }
   
-  bool run([bool isSubUnit = false]) {
-
-    if(!isSubUnit) {
-      SpecContext.output.SpecStart();
-      SpecStatistics.Clear();
-    }
+  bool _internalRun(_SpecContextImpl context) {
     
     var result = 1;
 
@@ -40,7 +32,8 @@ class Story  implements Runables {
     
     for(var scenario in this._scenarios)
     {
-      var scenarioResult = scenario.run(true);
+      var contextCopy = new _SpecContextImpl._clone(context);
+      var scenarioResult = scenario._runFromParent(contextCopy);
       result &= scenarioResult ? 1 : 0;
     }
     
@@ -52,11 +45,6 @@ class Story  implements Runables {
     if(result == 0) {
       stat.failedStories++;
       stat.failedStoryNames.add(this.title);
-    }
-    
-    if(!isSubUnit) {
-      SpecContext.output.writeStatistics(stat);
-      SpecContext.output.SpecEnd();
     }
     
     return result == 1 ? true : false;

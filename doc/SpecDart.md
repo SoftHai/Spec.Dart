@@ -12,6 +12,20 @@ Spec.Dart contains 3 main elements to create BDD tests:
 
 #Defining Tests
 
+##Common
+
+All Spec elements are supporting a `setUp` and a `tearDown` function. So that you can create and destroy resources on higher level (e.g. Database connections).
+
+```dart
+var feature = new Feature("UserManagement");
+feature.setUp((context) {
+    // SetUp e.g. some expensive database objects
+  });
+feature.tearDown((context) {
+    // TearDown e.g. some resources (e.g. Database connection close)
+  });
+```
+
 ##Feature
 
 A `Feature` is currently the top level spec object. You don't need to create features or other objects. They are optional to give you test-output a better structure (like groups in the dart unittest).
@@ -81,7 +95,7 @@ You can shared data across the 3 function by saving and loading from the `contex
 
 The func-parameter in the `given` and `when` part are optional.
 
-###Multi executing Scenarios
+###Multi executing Scenarios (Example Data)
 This scenarios are executing several times by different given data.
 
 The upper example shows you how to test an login. But you don't want to create 2 or more blocks of this code to test the login with different conndions (e.g. valid, invalid, only username, ...).
@@ -109,6 +123,31 @@ Additional you can see in the `than` function that it don't inputs the login dat
 All example data in an map are added to the `context.data` object. And you can access this by the name defined in the map.
 
 The test will be executed for each item in the example list.
+
+####Example SetUp / TearDown
+
+Additional to the normal `setUp` and a `tearDown` functions, Scenario support 2 additional functions `exampleSetUp` and `exampleTearDown`. The difference between this functions is, that the normal SetUp / TearDown are called one time per Scenario. The example SetUp / TearDown functions are call for each row of the example.
+
+```dart
+  story1.scenario("Login Test - Example Data")
+         ..given(text: "is a login controller",
+                 func: (context) => context.data["ctrl"] =  new LoginController())
+
+         ..when(text: "a user insert login data (user: [user] / password: [pw])",
+               func: (context) => context.data["ctrl"].login(context.data["user"], context.data["pw"]))
+
+         ..than(text: "the user is perhaps Logged in",
+                func: (context) => expect(context.data["ctrl"].isLogin, context.data["successful"]))
+
+         ..example([{ "user": "Soft", "pw": "Hai", "successful": true},
+                    { "user": "Hero", "pw": "Man", "successful": false}])
+         ..exampleSetUp((context) {
+         	// Example SetUp code here
+         })
+         ..exampleTearDown((context) {
+         	// Example TearDown code here
+         });
+```
 
 #Executing Tests
 

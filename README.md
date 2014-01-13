@@ -38,6 +38,12 @@ SpecContext.output = new HtmlOutputFormatter((m) => print(m));
 
 // Create Features
 var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
+feature.setUp((context) {
+    // SetUp e.g. some expensive database objects
+  });
+feature.tearDown((context) {
+    // TearDown e.g. some resources (e.g. Database connection close)
+  });
 
 // Create Stories of features
 var story1 = feature.story("Login",

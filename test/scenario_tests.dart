@@ -33,6 +33,26 @@ main([bool disableInit = false]) {
     });
     
     setUp(() => formatter.Clear());
+    test("- Test - SetUp / TearDown", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario.setUp((context) => SpecContext.output.writeMessage("SETUP"));
+      scenario.tearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
+      
+      scenario.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'SETUP\n'
+             'Scenario: Scenario Title\n'
+             'TEARDOWN\n'
+             'Features: 0 of 0 are failed ()\n'
+             'Stories: 0 of 0 are failed ()\n'
+             'Scenarios: 1 of 1 are failed (Scenario Title)\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
     test("- Test - Given with func", () {
       var scenario = new Scenario("Scenario Title");
       scenario.given(text: "is something", func: (context) => context.data["data1"] = 1);
@@ -279,6 +299,36 @@ main([bool disableInit = false]) {
              '-----------------------------------------------------------------------------------------\n'
              'Scenario: Scenario Title\n'
              '  Than happens something with examples\n'
+             '  Example\n'
+             '    | Data1 | Data2 | Expected | TestResult |\n'
+             '    | 1 | 2 | true | true |\n'
+             '    | 3 | 4 | false | false |\n'
+             'Features: 0 of 0 are failed ()\n'
+             'Stories: 0 of 0 are failed ()\n'
+             'Scenarios: 1 of 1 are failed (Scenario Title)\n'
+             '-----------------------------------------------------------------------------------------\n'
+             '');
+    });
+    
+    setUp(() => formatter.Clear());
+    test("- Test - Than example data setup / teardown", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..than(text: "happens something with examples", func: (context) => context.data["Expected"])
+              ..example([{ "Data1": 1, "Data2": 2, "Expected": true},
+                         { "Data1": 3, "Data2": 4, "Expected": false}])
+              ..exampleSetUp((context) => SpecContext.output.writeMessage("SETUP"))
+              ..exampleTearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
+      
+      scenario.run();
+      
+      expect(formatter.output, 
+             '-----------------------------------------------------------------------------------------\n'
+             'Scenario: Scenario Title\n'
+             '  Than happens something with examples\n'
+             'SETUP\n'
+             'TEARDOWN\n'
+             'SETUP\n'
+             'TEARDOWN\n'
              '  Example\n'
              '    | Data1 | Data2 | Expected | TestResult |\n'
              '    | 1 | 2 | true | true |\n'
