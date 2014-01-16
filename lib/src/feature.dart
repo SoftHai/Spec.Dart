@@ -17,42 +17,38 @@ abstract class SpecBase {
     this._tearDown = func;
   }
   
-  bool _runFromParent(_SpecContextImpl context) {
+  Future<bool> _runFromParent(_SpecContextImpl context) {
     this._specContext = context;
     return this._runImpl(true);
   }
   
-  bool run() {
+  Future<bool> run() {
     return this._runImpl(false);
   }
   
-  bool _runImpl([bool isSubUnit = false]) {
+  Future<bool> _runImpl([bool isSubUnit = false]) {
     
     if(!isSubUnit) {
       SpecContext.output.SpecStart();
       SpecStatistics.Clear();
     }
     
-    if(this._setUp != null) {
-      this._setUp(_specContext);
-    }
-    
-    var result = this._internalRun(_specContext);
-    
-    if(this._tearDown != null) {
-      this._tearDown(_specContext);
-    }
-    
-    var stat = new SpecStatistics.current();
-    if(!isSubUnit) {
-      SpecContext.output.writeStatistics(stat);
-      SpecContext.output.SpecEnd();
-    }
-    
-    return result;
+    return new Future.sync(() {
+      if(this._setUp != null) return this._setUp(_specContext);
+    }).then((_) { 
+      return this._internalRun(_specContext); 
+    }).whenComplete(() {
+      if(this._tearDown != null) return this._tearDown(_specContext); 
+    }).whenComplete(() {
+      var stat = new SpecStatistics.current();
+      if(!isSubUnit) {
+        SpecContext.output.writeStatistics(stat);
+        SpecContext.output.SpecEnd();
+      }
+    }).catchError((ex) => SpecContext.output.writeMessage("$ex", OutputFormatter.MESSAGE_TYPE_FAILURE));
   }
   
-  bool _internalRun(_SpecContextImpl context);
+  Future<bool> _internalRun(_SpecContextImpl context);
 }
 
 class Feature extends SpecBase {
@@ -88,30 +84,29 @@ class Feature extends SpecBase {
     return story;
   }
   
-  bool _internalRun(_SpecContextImpl context) {
+  Future<bool> _internalRun(_SpecContextImpl context) {
     
-    var result = 1;
+    var results = new List<bool>();
 
     SpecContext.output.writeSpec("${SpecContext.language.feature}",": ${this.name} - ${this.description}");
     SpecContext.output.incIntent();
     
-    for(var child in this._childSpecs)
-    {
+    return Future.forEach(this._childSpecs, (child) {
       var contextCopy = new _SpecContextImpl._clone(context);
-      var childResult = child._runFromParent(contextCopy);
-      result &= childResult ? 1 : 0;
-    }
-        
-    SpecContext.output.decIntent();
-    SpecContext.output.writeEmptyLine();
-    
-    var stat = new SpecStatistics.current();
-    stat.executedFeatures++;
-    if(result == 0)  { 
-      stat.failedFeatures++;
-      stat.failedFeatureNames.add(this.name);
-    }
-    
-    return result == 1 ? true : false;
+      return child._runFromParent(contextCopy)
+                  .then((v) => results.add(v));
+    }).then((_) => results.where((r) => r == false).length == 0)
+      .whenComplete(() {
+      SpecContext.output.decIntent();
+      SpecContext.output.writeEmptyLine();
+      
+      var successful = results.where((r) => r == false).length == 0;
+      var stat = new SpecStatistics.current();
+      stat.executedFeatures++;
+      if(!successful)  { 
+        stat.failedFeatures++;
+        stat.failedFeatureNames.add(this.name);
+      }
+    });
   }
 }

@@ -40,75 +40,73 @@ class Scenario extends SpecBase {
     this._exampleTearDown = func;
   }
   
-  bool _internalRun(_SpecContextImpl context) {
+  Future<bool> _internalRun(_SpecContextImpl context) {
     
     SpecContext.output.writeSpec("${SpecContext.language.scenario}", ": ${this.title}");
     
-    var runResult = false;
+    Future future = null;
+    var results = new List<bool>();
+    
     if(this._exampleData != null) {
-      // Given
+      // Print steps
       if (this._givenSteps != null) this._givenSteps.printSteps(SpecContext.language.given);
-      // When
       if (this._whenSteps != null) this._whenSteps.printSteps(SpecContext.language.when);
-      // Than
       this._thanSteps.printSteps(SpecContext.language.than);
 
-      // Example Data
-      var result = 1;
-      var results = new List<bool>();
-      
-      for(var data in this._exampleData)
-      {
-        var contextCopy = new _SpecContextImpl._clone(context);
+      // Execute Example Data
+      future = Future.forEach(this._exampleData, (data) {
         
-        if(this._exampleSetUp != null) {
-          this._exampleSetUp(contextCopy);
-        }
-
+        var contextCopy = new _SpecContextImpl._clone(context);
         contextCopy.data.addAll(data);
         
-        if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, contextCopy, false, true);
-        if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, false, true);
-        var dataResult = this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true);
-        result &= dataResult ? 1 : 0;
-        results.add(dataResult);
-        
-        if(this._exampleTearDown != null) {
-          this._exampleTearDown(contextCopy);
-        }
-      }
-      
-      SpecContext.output.incIntent();
-      SpecContext.output.writeSpec(SpecContext.language.example, "");
-      SpecContext.output.incIntent();
-      SpecContext.output.writeExampleData(this._exampleData, results);
-      SpecContext.output.decIntent();
-      SpecContext.output.decIntent();
-      
-      runResult = result == 1 ? true : false;
+        return new Future.sync(() {
+          if(this._exampleSetUp != null) return this._exampleSetUp(contextCopy);
+        }).then((_) {
+          if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, contextCopy, false, true);
+        }).then((_) {
+          if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, false, true);
+        }).then((_) {
+          return new Future.sync(() => this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true))
+                           .then((result) => results.add(result))
+                           .catchError((_) => results.add(false));
+        }).then((_) {
+          if(this._exampleTearDown != null) return this._exampleTearDown(contextCopy);
+        });
+      }).whenComplete(() {
+        SpecContext.output.incIntent();
+        SpecContext.output.writeSpec(SpecContext.language.example, "");
+        SpecContext.output.incIntent();
+        SpecContext.output.writeExampleData(this._exampleData, results);
+        SpecContext.output.decIntent();
+        SpecContext.output.decIntent();
+      });
     }
     else {
-      // Given
-      if (this._givenSteps != null) this._givenSteps.executeSteps(SpecContext.language.given, context, false);
-      
-      // When
-      if (this._whenSteps != null) this._whenSteps.executeSteps(SpecContext.language.when, context, false);
-      
-      // Than
-      if (this._thanSteps != null) {
-        runResult = this._thanSteps.executeSteps(SpecContext.language.than, context, true);
+      future = new Future.sync(() {
+        if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, context, false);
+      }).then((_) {
+        if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, context, false);
+      }).then((_) {
+        if (this._thanSteps != null) {
+          return this._thanSteps.executeSteps(SpecContext.language.than, context, true).then((result) => results.add(result));
+        }
+        else {
+          results.add(false);
+        }
+      });
+    }
+    
+    return future.then((_) {
+      return results.where((r) => r == false).length == 0;
+    }).whenComplete(() {
+      var successful = results.where((r) => r == false).length == 0;
+      var stat = new SpecStatistics.current();
+      stat.executedScenarios++;
+      if(!successful)  {
+        stat.failedScenarios++;
+        stat.failedScenarioNames.add(this.title);
       }
-     
-    }
-    
-    var stat = new SpecStatistics.current();
-    stat.executedScenarios++;
-    if(!runResult)  {
-      stat.failedScenarios++;
-      stat.failedScenarioNames.add(this.title);
-    }
-    
-    return runResult;
+    });
   }
   
 }

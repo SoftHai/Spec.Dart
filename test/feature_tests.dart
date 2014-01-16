@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:spec_dart/spec_dart.dart';
 import 'package:unittest/unittest.dart';
 
@@ -11,70 +12,96 @@ main() {
   group("Feature", () {
     
     setUp(() => formatter.Clear());
-    test("- Test - Basiscs", () {
+    
+    test("- Test - Basiscs", () {     
       var feature = new Feature("BDD", "BDD makes tests more readable");
       expect(feature.name, equals("BDD"));
       expect(feature.description, equals("BDD makes tests more readable"));
       
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Feature: BDD - BDD makes tests more readable\n'
-             '\n'
-             'Features: 0 of 1 are failed ()\n'
-             'Stories: 0 of 0 are failed ()\n'
-             'Scenarios: 0 of 0 are failed ()\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+            '-----------------------------------------------------------------------------------------\n'
+            'Feature: BDD - BDD makes tests more readable\n'
+            '\n'
+            'Features: 0 of 1 are failed ()\n'
+            'Stories: 0 of 0 are failed ()\n'
+            'Scenarios: 0 of 0 are failed ()\n'
+            '-----------------------------------------------------------------------------------------\n'
+        '');
+      });
     });
       
-    setUp(() => formatter.Clear());
     test("- Test - SetUp / TearDown", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       feature.setUp((context) => SpecContext.output.writeMessage("SETUP"));
       feature.tearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
       
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-          '-----------------------------------------------------------------------------------------\n'
-          'SETUP\n'
-          'Feature: BDD - BDD makes tests more readable\n'
-          '\n'
-          'TEARDOWN\n'
-          'Features: 0 of 1 are failed ()\n'
-          'Stories: 0 of 0 are failed ()\n'
-          'Scenarios: 0 of 0 are failed ()\n'
-          '-----------------------------------------------------------------------------------------\n'
-      '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+            '-----------------------------------------------------------------------------------------\n'
+            'SETUP\n'
+            'Feature: BDD - BDD makes tests more readable\n'
+            '\n'
+            'TEARDOWN\n'
+            'Features: 0 of 1 are failed ()\n'
+            'Stories: 0 of 0 are failed ()\n'
+            'Scenarios: 0 of 0 are failed ()\n'
+            '-----------------------------------------------------------------------------------------\n'
+        '');
+      });
     });
     
-    setUp(() => formatter.Clear());
+    test("- Test - SetUp / TearDown (Async)", () {
+      var feature = new Feature("BDD", "BDD makes tests more readable");
+      feature.setUp((context) => new Future.delayed(new Duration(seconds: 2), () => SpecContext.output.writeMessage("SETUP")));
+      feature.tearDown((context) => new Future.delayed(new Duration(seconds: 2), () => SpecContext.output.writeMessage("TEARDOWN")));
+      
+      var future = feature.run();
+      
+      return future.whenComplete(() {
+        expect(formatter.output, 
+            '-----------------------------------------------------------------------------------------\n'
+            'SETUP\n'
+            'Feature: BDD - BDD makes tests more readable\n'
+            '\n'
+            'TEARDOWN\n'
+            'Features: 0 of 1 are failed ()\n'
+            'Stories: 0 of 0 are failed ()\n'
+            'Scenarios: 0 of 0 are failed ()\n'
+            '-----------------------------------------------------------------------------------------\n'
+        '');
+      });
+    });
+    
     test("- Test - Feature with story", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var story = feature.story("Testing", asA: "Tester", iWant: "readable tests", soThat: "I easy understand what the test are doing");
       
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Feature: BDD - BDD makes tests more readable\n'
-             '  Story: Testing\n'
-             '    As a Tester\n'
-             '    I want readable tests\n'
-             '    So that I easy understand what the test are doing\n'
-             '\n'
-             '\n'
-             '\n'
-             'Features: 0 of 1 are failed ()\n'
-             'Stories: 0 of 1 are failed ()\n'
-             'Scenarios: 0 of 0 are failed ()\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+               '-----------------------------------------------------------------------------------------\n'
+               'Feature: BDD - BDD makes tests more readable\n'
+               '  Story: Testing\n'
+               '    As a Tester\n'
+               '    I want readable tests\n'
+               '    So that I easy understand what the test are doing\n'
+               '\n'
+               '\n'
+               '\n'
+               'Features: 0 of 1 are failed ()\n'
+               'Stories: 0 of 1 are failed ()\n'
+               'Scenarios: 0 of 0 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
     });
    
-    setUp(() => formatter.Clear());
     test("- Test - Feature with scenario", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var scenario = feature.scenario("This is readable")
@@ -96,9 +123,11 @@ main() {
                           expect(context.data["data2"], "data2");
                           return true;
                         });
-      feature.run();
       
-      expect(formatter.output, 
+      var future = feature.run();
+      
+      return future.whenComplete(() {
+       expect(formatter.output, 
              '-----------------------------------------------------------------------------------------\n'
              'Feature: BDD - BDD makes tests more readable\n'
              '  Scenario: This is readable\n'
@@ -112,29 +141,30 @@ main() {
              'Scenarios: 0 of 1 are failed ()\n'
              '-----------------------------------------------------------------------------------------\n'
              '');
+      });
     });
     
-    setUp(() => formatter.Clear());
     test("- Test - Feature with sub feature", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var subFeature = feature.subFeature("Story", description: "A Story is a sub feature of BDD");
       
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Feature: BDD - BDD makes tests more readable\n'
-             '  Feature: Story - A Story is a sub feature of BDD\n'
-             '\n'
-             '\n'
-             'Features: 0 of 2 are failed ()\n'
-             'Stories: 0 of 0 are failed ()\n'
-             'Scenarios: 0 of 0 are failed ()\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+               '-----------------------------------------------------------------------------------------\n'
+               'Feature: BDD - BDD makes tests more readable\n'
+               '  Feature: Story - A Story is a sub feature of BDD\n'
+               '\n'
+               '\n'
+               'Features: 0 of 2 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 0 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
     });
     
-    setUp(() => formatter.Clear());
     test("- Test - Feature with story, subfeature, scenario", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var story = feature.story("Testing", asA: "Tester", iWant: "readable tests", soThat: "I easy understand what the test are doing");
@@ -159,33 +189,34 @@ main() {
                           return true;
                         });
       
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Feature: BDD - BDD makes tests more readable\n'
-             '  Story: Testing\n'
-             '    As a Tester\n'
-             '    I want readable tests\n'
-             '    So that I easy understand what the test are doing\n'
-             '\n'
-             '\n'
-             '  Feature: Story - A Story is a sub feature of BDD\n'
-             '\n'
-             '  Scenario: This is readable\n'
-             '    Given are some data\n'
-             '    When I change some data\n'
-             '    Than I check the changed data1: true\n'
-             '      And I check the unchanged data2: true\n'
-             '\n'
-             'Features: 0 of 2 are failed ()\n'
-             'Stories: 0 of 1 are failed ()\n'
-             'Scenarios: 0 of 1 are failed ()\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+               '-----------------------------------------------------------------------------------------\n'
+               'Feature: BDD - BDD makes tests more readable\n'
+               '  Story: Testing\n'
+               '    As a Tester\n'
+               '    I want readable tests\n'
+               '    So that I easy understand what the test are doing\n'
+               '\n'
+               '\n'
+               '  Feature: Story - A Story is a sub feature of BDD\n'
+               '\n'
+               '  Scenario: This is readable\n'
+               '    Given are some data\n'
+               '    When I change some data\n'
+               '    Than I check the changed data1: true\n'
+               '      And I check the unchanged data2: true\n'
+               '\n'
+               'Features: 0 of 2 are failed ()\n'
+               'Stories: 0 of 1 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
     });
     
-    setUp(() => formatter.Clear());
     test("- Test - Feature with story with senario", () {
       var feature = new Feature("BDD", "BDD makes tests more readable");
       var story = feature.story("Testing", asA: "Tester", iWant: "readable tests", soThat: "I easy understand what the test are doing");
@@ -208,28 +239,30 @@ main() {
                           expect(context.data["data2"], "data2");
                           return true;
                         });
-      feature.run();
+      var future = feature.run();
       
-      expect(formatter.output, 
-             '-----------------------------------------------------------------------------------------\n'
-             'Feature: BDD - BDD makes tests more readable\n'
-             '  Story: Testing\n'
-             '    As a Tester\n'
-             '    I want readable tests\n'
-             '    So that I easy understand what the test are doing\n'
-             '\n'
-             '    Scenario: This is readable\n'
-             '      Given are some data\n'
-             '      When I change some data\n'
-             '      Than I check the changed data1: true\n'
-             '        And I check the unchanged data2: true\n'
-             '\n'
-             '\n'
-             'Features: 0 of 1 are failed ()\n'
-             'Stories: 0 of 1 are failed ()\n'
-             'Scenarios: 0 of 1 are failed ()\n'
-             '-----------------------------------------------------------------------------------------\n'
-             '');
+      return future.whenComplete(() {
+        expect(formatter.output, 
+               '-----------------------------------------------------------------------------------------\n'
+               'Feature: BDD - BDD makes tests more readable\n'
+               '  Story: Testing\n'
+               '    As a Tester\n'
+               '    I want readable tests\n'
+               '    So that I easy understand what the test are doing\n'
+               '\n'
+               '    Scenario: This is readable\n'
+               '      Given are some data\n'
+               '      When I change some data\n'
+               '      Than I check the changed data1: true\n'
+               '        And I check the unchanged data2: true\n'
+               '\n'
+               '\n'
+               'Features: 0 of 1 are failed ()\n'
+               'Stories: 0 of 1 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+        });
     });
     
   });

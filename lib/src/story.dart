@@ -19,9 +19,9 @@ class Story  extends SpecBase {
     return scenario;
   }
   
-  bool _internalRun(_SpecContextImpl context) {
+  Future<bool> _internalRun(_SpecContextImpl context) {
     
-    var result = 1;
+    var results = new List<bool>();
 
     SpecContext.output.writeSpec("${SpecContext.language.story}", ": ${this.title}");
     SpecContext.output.incIntent();
@@ -30,24 +30,23 @@ class Story  extends SpecBase {
     SpecContext.output.writeSpec("${SpecContext.language.soThat}", " ${this.soThat}");
     SpecContext.output.writeEmptyLine();
     
-    for(var scenario in this._scenarios)
-    {
+    return Future.forEach(this._scenarios, (scenario) {
       var contextCopy = new _SpecContextImpl._clone(context);
-      var scenarioResult = scenario._runFromParent(contextCopy);
-      result &= scenarioResult ? 1 : 0;
-    }
-    
-    SpecContext.output.decIntent();
-    SpecContext.output.writeEmptyLine();
-    
-    var stat = new SpecStatistics.current();
-    stat.executedStories++;
-    if(result == 0) {
-      stat.failedStories++;
-      stat.failedStoryNames.add(this.title);
-    }
-    
-    return result == 1 ? true : false;
+      return scenario._runFromParent(contextCopy)
+                     .then((v) => results.add(v));
+    }).then((_) => results.where((r) => r == false).length == 0)
+      .whenComplete(() {
+        SpecContext.output.decIntent();
+        SpecContext.output.writeEmptyLine();
+        
+        var successful = results.where((r) => r == false).length == 0;
+        var stat = new SpecStatistics.current();
+        stat.executedStories++;
+        if(!successful) {
+          stat.failedStories++;
+          stat.failedStoryNames.add(this.title);
+        }
+      });
     
   }
   

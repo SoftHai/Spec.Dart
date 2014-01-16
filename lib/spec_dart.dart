@@ -1,5 +1,6 @@
 library softhai.spec_dart;
 
+import 'dart:async';
 import 'package:unittest/unittest.dart';
 
 part 'src/spec_context.dart';

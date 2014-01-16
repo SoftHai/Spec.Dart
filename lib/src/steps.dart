@@ -1,6 +1,6 @@
 part of softhai.spec_dart;
 
-typedef bool SpecFunc(SpecContext context);
+typedef dynamic SpecFunc(SpecContext context);
 
 abstract class StepChain {
   
@@ -37,55 +37,60 @@ class _StepChainImpl implements StepChain {
     SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
   }
   
-  bool executeSteps(String prefix, _SpecContextImpl context, [bool validate = false, bool silent = false]) {
+  Future<bool> executeSteps(String prefix, _SpecContextImpl context, [bool validate = false, bool silent = false]) {
         
-    var result = 1;
+    var results = new List<bool>();
+
+    var future = new Future.sync(() {
+      if(!silent) SpecContext.output.incIntent();
+      return this._executeStep(prefix, this._steps.first, context, validate, silent)
+                 .then((r) => results.add(r));
+    }).then((_) {
+        if(!silent) SpecContext.output.incIntent();
+        return Future.forEach(this._steps.skip(1), (step) {
+          return this._executeStep(SpecContext.language.and, step, context, validate, silent)
+                     .then((r) => results.add(r));
+        });
+    }).then((_) => results.where((r) => r != true).length == 0)
+      .whenComplete(() {
+        if(!silent) SpecContext.output.decIntent();
+        if(!silent) SpecContext.output.decIntent();
+      });
     
-    if(!silent) SpecContext.output.incIntent();
-    result &= this._executeStep(prefix, this._steps.first, context, validate, silent);
-    
-    if(!silent) SpecContext.output.incIntent();
-    for(int i = 1; i < this._steps.length; i++) {
-      result &= this._executeStep(SpecContext.language.and, this._steps[i], context, validate, silent);
-    }
-    if(!silent) SpecContext.output.decIntent();
-    if(!silent) SpecContext.output.decIntent();
-    
-    return result == 1 ? true : false;
+    return future;
   }
 
-  int _executeStep(String keyWord, _Step currentStep, _SpecContextImpl context, bool validate, bool silent) {
+  Future<bool> _executeStep(String keyWord, _Step currentStep, _SpecContextImpl context, bool validate, bool silent) {
 
-    if(validate)
-    {
-      var vailidateResult = false;
-      try {
-        vailidateResult = currentStep.func(context);
+    return new Future.sync(() { if(currentStep.func != null) return currentStep.func(context); })
+      .then((r) {
+      var success = r != false;
+      if(validate)
+      {        
+        if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $success", 
+            success ? OutputFormatter.MESSAGE_TYPE_SUCCESS : OutputFormatter.MESSAGE_TYPE_FAILURE); 
       }
-      on TestFailure catch(testFailure) {
-        // Handle Unit Test Exceptions
-        vailidateResult = "Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}";
-      }
-      catch (ex) {
-        // Handle all other
-        vailidateResult = "Exception($ex)";
+      else
+      {
+        if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
       }
       
-      var success = vailidateResult == true || vailidateResult == null;
-      
-      if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $vailidateResult", 
-                                                success ? OutputFormatter.MESSAGE_TYPE_SUCCESS : OutputFormatter.MESSAGE_TYPE_FAILURE); 
-      
-      return (success ? 1 : 0);
-    }
-    else
-    {
-      if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
-      
-      if(currentStep.func != null) currentStep.func(context);
-      
-      return 1;
-    }
+      return success;
+    })
+      .catchError((testFailure) {
+      if(!silent) {
+        var errorMessage = "Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}";
+        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", OutputFormatter.MESSAGE_TYPE_FAILURE);
+      }
+    }, test: (ex) => ex is TestFailure)
+    
+      .catchError((ex) {
+      if(!silent) {
+        var errorMessage = "Exception($ex)";
+        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", OutputFormatter.MESSAGE_TYPE_FAILURE);
+      }
+    }, test: (ex) => !(ex is TestFailure));
+
   }
 }
 
