@@ -14,6 +14,7 @@ Spec.Dart contains 3 main elements to create BDD tests:
 
 ##Common
 
+### SetUp / TearDown
 All Spec elements are supporting a `setUp` and a `tearDown` function. So that you can create and destroy resources on higher level (e.g. Database connections).
 
 ```dart
@@ -25,6 +26,12 @@ feature.tearDown((context) {
     // TearDown e.g. some resources (e.g. Database connection close)
   });
 ```
+
+### Async Support
+
+All Spec functions are support `Future` return data. This way you can load async data from a database, a file, a WebService and so on.
+
+The Spec element will wait until the `Future` is complete and will continue than the executing.
 
 ##Feature
 
