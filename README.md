@@ -100,14 +100,14 @@ Doc
 =========
 
 Here you can find the framework documentation:
-* [Spec.Dart](https://github.com/SoftHai/Spec.Dart/blob/master/doc/SpecDart.md)
-* [Translation](https://github.com/SoftHai/Spec.Dart/blob/master/doc/Translation.md)
-* [OutputFormatter](https://github.com/SoftHai/Spec.Dart/blob/master/doc/OutputFormatter.md)
+* [Spec.Dart](/doc/SpecDart.md)
+* [Translation](/doc/Translation.md)
+* [OutputFormatter](/doc/OutputFormatter.md)
 
 Changelog
 =========
 
-See [here](https://github.com/SoftHai/Spec.Dart/blob/master/CHANGELOG.md)
+See [here](/CHANGELOG.md)
 
 Roadmap
 =========
