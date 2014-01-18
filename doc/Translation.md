@@ -37,6 +37,10 @@ class _SpecLangEN implements SpecLanguage {
   final String example = "Example";
 
   final String and = "And";
+
+  final String success = "SUCCESS";
+  final String failed = "FAILED";
+
 }
 ```
 Change the strings to the your language and assign an istance of the class to the `SpecContext.language` property.

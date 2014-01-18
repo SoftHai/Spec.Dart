@@ -6,6 +6,15 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 ##Version 0.3.0-beta
 **Release date: *not released* **
 
+**Breaking Changes**
+--------------------------------------------------------------
+- Renamed `ConsoleOutputFormatter`to `TextOutputFormatter`
+- Add `success`to `failed` to the `SpecLanguage` interface
+--------------------------------------------------------------
+
+- **(IMP)**: Add a output function to the construtor of the class `TextOutputFormatter`, to change the default output from console to what ever you need
+- **(IMP)**: Changed Senario Than result test from `true`/`false` to `SUCCESS`/`FAILED` and made than translatable
+
 ##Version 0.2.0-beta
 **Release date: *16.01.2014* **
 

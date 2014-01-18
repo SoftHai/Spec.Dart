@@ -67,8 +67,11 @@ class _StepChainImpl implements StepChain {
       var success = r != false;
       if(validate)
       {        
-        if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $success", 
-            success ? OutputFormatter.MESSAGE_TYPE_SUCCESS : OutputFormatter.MESSAGE_TYPE_FAILURE); 
+        if(!silent) {
+          var successText = success ? SpecContext.language.success : SpecContext.language.failed;
+          SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $successText", 
+              success ? OutputFormatter.MESSAGE_TYPE_SUCCESS : OutputFormatter.MESSAGE_TYPE_FAILURE); 
+        }
       }
       else
       {

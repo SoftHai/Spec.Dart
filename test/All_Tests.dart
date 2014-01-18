@@ -1,11 +1,15 @@
 import 'feature_tests.dart' as featureTests;
 import 'story_tests.dart' as storyTests;
 import 'scenario_tests.dart' as scenarioTests;
+import 'package:spec_dart/spec_dart.dart';
 
 main() {
   
-  featureTests.main();
-  storyTests.main(true);
-  scenarioTests.main(true);
+  StringBuffer outputString = new StringBuffer();
+  SpecContext.output = new TextOutputFormatter(outputFunc: (o) => outputString.writeln(o));
+  
+  featureTests.tests(outputString);
+  storyTests.tests(outputString);
+  scenarioTests.tests(outputString);
   
 }

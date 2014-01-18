@@ -2,22 +2,16 @@ import 'dart:async';
 import 'package:spec_dart/spec_dart.dart';
 import 'package:unittest/unittest.dart';
 
-import 'mock_output_formatter.dart';
+main() { 
+  StringBuffer outputString = new StringBuffer();
+  SpecContext.output = new TextOutputFormatter(outputFunc: (o) => outputString.writeln(o));
+}
 
-main([bool disableInit = false]) {
-  
-  MockOutputFormatter formatter;
-  if(!disableInit) {
-    formatter = new MockOutputFormatter();
-    SpecContext.output = formatter;
-  }
-  else {
-    formatter = SpecContext.output;
-  }
+tests(StringBuffer outputString) {
   
   group("Scenario", () {
     
-    setUp(() => formatter.Clear());
+    setUp(() => outputString.clear());
     
     test("- Test - Basiscs", () {
       var scenario = new Scenario("Scenario Title");
@@ -25,7 +19,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                'Features: 0 of 0 are failed ()\n'
@@ -36,7 +30,6 @@ main([bool disableInit = false]) {
       });
     });
     
-    setUp(() => formatter.Clear());
     test("- Test - SetUp / TearDown", () {
       var scenario = new Scenario("Scenario Title");
       scenario.setUp((context) => SpecContext.output.writeMessage("SETUP"));
@@ -45,7 +38,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Scenario: Scenario Title\n'
@@ -65,7 +58,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Given is something\n'
@@ -84,7 +77,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Given is nothing\n'
@@ -104,7 +97,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
             '-----------------------------------------------------------------------------------------\n'
             'Scenario: Scenario Title\n'
             '  Given is something\n'
@@ -126,7 +119,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Given is something\n'
@@ -147,7 +140,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  When something happens\n'
@@ -166,7 +159,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  When nothing happens\n'
@@ -186,7 +179,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  When something happens\n'
@@ -208,7 +201,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  When something happens\n'
@@ -229,10 +222,10 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
-               '  Than happens something special: true\n'
+               '  Than happens something special: SUCCESS\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 0 of 1 are failed ()\n'
@@ -248,7 +241,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Than happens an exception: Exception(Demo Exception)\n'
@@ -267,14 +260,14 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output.startsWith(
+        expect(outputString.toString().startsWith(
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Than happens an exception: Exception(Expected: false  Actual: <true>)\n'), isTrue);
         
         // StackTrace is cut out because the file pathes are different local and BuildServer
         
-        expect(formatter.output.endsWith(
+        expect(outputString.toString().endsWith(
             'Features: 0 of 0 are failed ()\n'
             'Stories: 0 of 0 are failed ()\n'
             'Scenarios: 1 of 1 are failed (Scenario Title)\n'
@@ -291,11 +284,11 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
-               '  Than happens something special: false\n'
-               '    And more special: true\n'
+               '  Than happens something special: FAILED\n'
+               '    And more special: SUCCESS\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 1 of 1 are failed (Scenario Title)\n'
@@ -313,14 +306,14 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Than happens something with examples\n'
                '  Example\n'
                '    | Data1 | Data2 | Expected | TestResult |\n'
-               '    | 1 | 2 | true | true |\n'
-               '    | 3 | 4 | false | false |\n'
+               '    | 1 | 2 | true | SUCCESS |\n'
+               '    | 3 | 4 | false | FAILED |\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 1 of 1 are failed (Scenario Title)\n'
@@ -340,7 +333,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Scenario: Scenario Title\n'
                '  Than happens something with examples\n'
@@ -350,8 +343,8 @@ main([bool disableInit = false]) {
                'TEARDOWN\n'
                '  Example\n'
                '    | Data1 | Data2 | Expected | TestResult |\n'
-               '    | 1 | 2 | true | true |\n'
-               '    | 3 | 4 | false | false |\n'
+               '    | 1 | 2 | true | SUCCESS |\n'
+               '    | 3 | 4 | false | FAILED |\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 1 of 1 are failed (Scenario Title)\n'
@@ -374,7 +367,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Scenario: Scenario Title\n'
@@ -382,9 +375,81 @@ main([bool disableInit = false]) {
                '    And something else\n'
                '  When something happens\n'
                '    And more happens\n'
-               '  Than check given data: true\n'
-               '    And and when data: true\n'
+               '  Than check given data: SUCCESS\n'
+               '    And and when data: SUCCESS\n'
                'TEARDOWN\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+    
+    test("- Test - Complex (Async Call order)", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..setUp((context) {
+              context.data["CallCounter"] = 0;
+            })..given(text: "is something", func: (context) => new Future.delayed(new Duration(seconds: 3), () => context.data["Given1"] = ++context.data["CallCounter"]))
+                .and(text: "something else", func: (context) => new Future.delayed(new Duration(seconds: 3), () => context.data["Given2"] = ++context.data["CallCounter"]))
+              ..when(text: "something happens", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["When1"] = ++context.data["CallCounter"]))
+                .and(text: "more happens", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["When2"] = ++context.data["CallCounter"]))
+              ..than(text: "do something", func: (context) => new Future.delayed(new Duration(seconds: 1), () => context.data["Than1"] = ++context.data["CallCounter"]))
+                .and(text: "and more", func: (context) => new Future.delayed(new Duration(seconds: 1), () => context.data["Than2"] = ++context.data["CallCounter"]))
+              ..tearDown((context) {
+                  expect(context.data["Given1"], equals(1));
+                  expect(context.data["Given2"], equals(2));
+                  expect(context.data["When1"], equals(3));
+                  expect(context.data["When2"], equals(4));
+                  expect(context.data["Than1"], equals(5));
+                  expect(context.data["Than2"], equals(6));
+                });
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  Given is something\n'
+               '    And something else\n'
+               '  When something happens\n'
+               '    And more happens\n'
+               '  Than do something: SUCCESS\n'
+               '    And and more: SUCCESS\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+
+    test("- Test - Complex (Async / Sync mixed Call order)", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..setUp((context) {
+              context.data["CallCounter"] = 0;
+            })..given(text: "is something", func: (context) => context.data["Given1"] = ++context.data["CallCounter"])
+                .and(text: "something else", func: (context) => context.data["Given2"] = ++context.data["CallCounter"])
+              ..when(text: "something happens", func: (context) => new Future.delayed(new Duration(seconds: 5), () => context.data["When1"] = ++context.data["CallCounter"]))
+              ..than(text: "do something", func: (context) => context.data["Than1"] = ++context.data["CallCounter"])
+              ..tearDown((context) {
+                  expect(context.data["Given1"], equals(1));
+                  expect(context.data["Given2"], equals(2));
+                  expect(context.data["When1"], equals(3));
+                  expect(context.data["Than1"], equals(4));
+                });
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  Given is something\n'
+               '    And something else\n'
+               '  When something happens\n'
+               '  Than do something: SUCCESS\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 0 of 1 are failed ()\n'
@@ -412,7 +477,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Scenario: Scenario Title\n'
@@ -429,8 +494,8 @@ main([bool disableInit = false]) {
                'example TEARDOWN\n'
                '  Example\n'
                '    | Data1 | Data2 | Expected | TestResult |\n'
-               '    | 1 | 2 | true | true |\n'
-               '    | 3 | 4 | false | false |\n'
+               '    | 1 | 2 | true | SUCCESS |\n'
+               '    | 3 | 4 | false | FAILED |\n'
                'TEARDOWN\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
@@ -459,7 +524,7 @@ main([bool disableInit = false]) {
       var future = scenario.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Scenario: Scenario Title\n'
@@ -476,8 +541,8 @@ main([bool disableInit = false]) {
                'example TEARDOWN\n'
                '  Example\n'
                '    | Data1 | Data2 | Expected | TestResult |\n'
-               '    | 1 | 2 | true | true |\n'
-               '    | 3 | 4 | false | false |\n'
+               '    | 1 | 2 | true | SUCCESS |\n'
+               '    | 3 | 4 | false | FAILED |\n'
                'TEARDOWN\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'

@@ -85,8 +85,8 @@ Feature: UserManagement - With this feature, user can have an account to protect
       Than the user is perhaps Logged in
       Example
         | user | pw | successful | TestResult |
-        | Soft | Hai | true | true |
-        | Hero | Man | false | true |
+        | Soft | Hai | true | SUCCESS |
+        | Hero | Man | false | SUCCESS |
 
 Features: 0 of 1 are failed ()
 Stories: 0 of 1 are failed ()

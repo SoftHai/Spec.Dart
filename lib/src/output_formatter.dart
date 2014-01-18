@@ -20,12 +20,15 @@ abstract class OutputFormatter {
   void writeStatistics(SpecStatistics statistics);
 }
 
-class ConsoleOutputFormatter implements OutputFormatter {
+typedef void TextOutput(String object);
+
+class TextOutputFormatter implements OutputFormatter {
   
   String _indent = "  ";
   String _currentIntent = "";
+  TextOutput _outputFunc = print;
   
-  ConsoleOutputFormatter([this._indent = "  "]);
+  TextOutputFormatter({String intent: "  ", TextOutput printFunc: print}) : this._indent = intent, this._outputFunc = printFunc;
   
   void incIntent() {
     this._currentIntent += SpecContext.indent;
@@ -36,16 +39,16 @@ class ConsoleOutputFormatter implements OutputFormatter {
   }
   
   void SpecStart() {
-    print("-----------------------------------------------------------------------------------------");
+    this._outputFunc("-----------------------------------------------------------------------------------------");
   }
   
   void SpecEnd() {
-    print("-----------------------------------------------------------------------------------------");
+    this._outputFunc("-----------------------------------------------------------------------------------------");
   }
   
-  void writeEmptyLine() => print("");
-  void writeMessage(String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE]) => print(_currentIntent + message);
-  void writeSpec(String keyword, String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE])  => print(_currentIntent + keyword + message);
+  void writeEmptyLine() => this._outputFunc("");
+  void writeMessage(String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE]) => this._outputFunc(_currentIntent + message);
+  void writeSpec(String keyword, String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE])  => this._outputFunc(_currentIntent + keyword + message);
   
   void writeExampleData(List<Map<String, Object>> exampleData, List<Object> results) {
     
@@ -54,27 +57,27 @@ class ConsoleOutputFormatter implements OutputFormatter {
       header += "$key | ";
     }
     header += "TestResult |";
-    print(_currentIntent + header);
+    this._outputFunc(_currentIntent + header);
     
     
     for(int i = 0; i < exampleData.length; i++) {
       var data = exampleData[i];
-      var result = results[i];
+      var result = results[i] ? SpecContext.language.success : SpecContext.language.failed;
       var row = "| ";
       
       for(var value in data.values) {
         row += "$value | ";
       }
       row += "$result |";
-      print(_currentIntent + row);
+      this._outputFunc(_currentIntent + row);
     }
     
   }
   
   void writeStatistics(SpecStatistics statistics) {
-    print("Features: ${statistics.failedFeatures} of ${statistics.executedFeatures} are failed (${statistics.failedFeatureNames.join(",")})\n"
-          "Stories: ${statistics.failedStories} of ${statistics.executedStories} are failed (${statistics.failedStoryNames.join(",")})\n"
-          "Scenarios: ${statistics.failedScenarios} of ${statistics.executedScenarios} are failed (${statistics.failedScenarioNames.join(",")})");
+    this._outputFunc("Features: ${statistics.failedFeatures} of ${statistics.executedFeatures} are failed (${statistics.failedFeatureNames.join(",")})\n"
+                    "Stories: ${statistics.failedStories} of ${statistics.executedStories} are failed (${statistics.failedStoryNames.join(",")})\n"
+                    "Scenarios: ${statistics.failedScenarios} of ${statistics.executedScenarios} are failed (${statistics.failedScenarioNames.join(",")})");
   }
   
 }

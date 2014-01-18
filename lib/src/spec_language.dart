@@ -16,6 +16,9 @@ abstract class SpecLanguage {
   
   final String and = "";
   
+  final String success = "";
+  final String failed = "";
+  
   static SpecLanguage get en => new _SpecLangEN();
   
   static SpecLanguage get de => new _SpecLangDE();
@@ -36,6 +39,9 @@ class _SpecLangEN implements SpecLanguage {
   final String example = "Example";
   
   final String and = "And";
+  
+  final String success = "SUCCESS";
+  final String failed = "FAILED";
 }
 
 class _SpecLangDE implements SpecLanguage {
@@ -53,4 +59,7 @@ class _SpecLangDE implements SpecLanguage {
   final String example = "Beispiel";
   
   final String and = "Und";
+  
+  final String success = "Erfolgreich";
+  final String failed = "Fehler";
 }

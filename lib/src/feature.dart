@@ -45,7 +45,14 @@ abstract class SpecBase {
         SpecContext.output.writeStatistics(stat);
         SpecContext.output.SpecEnd();
       }
-    }).catchError((ex) => SpecContext.output.writeMessage("$ex", OutputFormatter.MESSAGE_TYPE_FAILURE));
+    }).catchError((testFailure) {
+        SpecContext.output.writeMessage("Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}", OutputFormatter.MESSAGE_TYPE_FAILURE);
+    }, test: (ex) => ex is TestFailure)
+    
+      .catchError((ex) {
+        SpecContext.output.writeMessage("Exception($ex)", OutputFormatter.MESSAGE_TYPE_FAILURE);
+    }, test: (ex) => !(ex is TestFailure));
+
   }
   
   Future<bool> _internalRun(_SpecContextImpl context);

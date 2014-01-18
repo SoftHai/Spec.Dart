@@ -10,7 +10,7 @@ But if you want to work with the results (e.g. setting a build to successful or 
 You can switch the output formatter by assigning a different formatter to the property `SpecContext.output`.
 
 The following output formatter are supported:
-* **ConsoleOutputFormatter**: This is the default output formatter and logs all outputs to the console.
+* **TextOutputFormatter**: This is the default output formatter and logs, by default, all outputs to the console.
 * **HtmlOutputFormatter**: This is an output formatter which creates a HTML document.
 
 ###HtmlOutputFormatter
@@ -47,6 +47,7 @@ class ExampleOutputFormatter implements OutputFormatter {
   void writeMessage(String message, [String type = MESSAGE_TYPE_NONE]);
   void writeSpec(String keyword, String message, [String type = MESSAGE_TYPE_NONE]);
   void writeExampleData(List<Map<String, Object>> data, List<Object> results);
+  void writeStatistics(SpecStatistics statistics);
 }
 ```
 

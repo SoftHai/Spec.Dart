@@ -66,7 +66,7 @@ class Scenario extends SpecBase {
         }).then((_) {
           if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, false, true);
         }).then((_) {
-          return new Future.sync(() => this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true))
+          return this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true)
                            .then((result) => results.add(result))
                            .catchError((_) => results.add(false));
         }).then((_) {

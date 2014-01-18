@@ -2,22 +2,16 @@ import "dart:async";
 import 'package:spec_dart/spec_dart.dart';
 import 'package:unittest/unittest.dart';
 
-import 'mock_output_formatter.dart';
+main() { 
+  StringBuffer outputString = new StringBuffer();
+  SpecContext.output = new TextOutputFormatter(outputFunc: (o) => outputString.writeln(o));
+}
 
-main([disableInit = false]) {
-  
-  MockOutputFormatter formatter;
-  if(!disableInit) {
-    formatter = new MockOutputFormatter();
-    SpecContext.output = formatter;
-  }
-  else {
-    formatter = SpecContext.output;
-  }
-  
+tests(StringBuffer outputString) {
+
   group("Story", () {
     
-    setUp(() => formatter.Clear());
+    setUp(() => outputString.clear());
     
     test("- Test - Basiscs", () {
       var story = new Story("Story of tests", asA: "Tester", iWant: "Readable tests", soThat: "I fast understand what they doing");
@@ -29,7 +23,7 @@ main([disableInit = false]) {
       var future = story.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Story: Story of tests\n'
                '  As a Tester\n'
@@ -53,7 +47,7 @@ main([disableInit = false]) {
       var future = story.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Story: Story of tests\n'
@@ -79,7 +73,7 @@ main([disableInit = false]) {
       var future = story.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'SETUP\n'
                'Story: Story of tests\n'
@@ -122,7 +116,7 @@ main([disableInit = false]) {
       var future = story.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Story: Story of tests\n'
                '  As a Tester\n'
@@ -132,8 +126,8 @@ main([disableInit = false]) {
                '  Scenario: This is readable\n'
                '    Given are some data\n'
                '    When I change some data\n'
-               '    Than I check the changed data1: true\n'
-               '      And I check the unchanged data2: true\n'
+               '    Than I check the changed data1: SUCCESS\n'
+               '      And I check the unchanged data2: SUCCESS\n'
                '\n'
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 1 are failed ()\n'

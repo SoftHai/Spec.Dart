@@ -2,16 +2,16 @@ import 'dart:async';
 import 'package:spec_dart/spec_dart.dart';
 import 'package:unittest/unittest.dart';
 
-import 'mock_output_formatter.dart';
+main() { 
+  StringBuffer outputString = new StringBuffer();
+  SpecContext.output = new TextOutputFormatter(outputFunc: (o) => outputString.writeln(o));
+}
 
-main() {
- 
-  var formatter = new MockOutputFormatter();
-  SpecContext.output = formatter;
+tests(StringBuffer outputString) {
   
   group("Feature", () {
     
-    setUp(() => formatter.Clear());
+    setUp(() => outputString.clear());
     
     test("- Test - Basiscs", () {     
       var feature = new Feature("BDD", "BDD makes tests more readable");
@@ -21,7 +21,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
             '-----------------------------------------------------------------------------------------\n'
             'Feature: BDD - BDD makes tests more readable\n'
             '\n'
@@ -41,7 +41,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
             '-----------------------------------------------------------------------------------------\n'
             'SETUP\n'
             'Feature: BDD - BDD makes tests more readable\n'
@@ -63,7 +63,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
             '-----------------------------------------------------------------------------------------\n'
             'SETUP\n'
             'Feature: BDD - BDD makes tests more readable\n'
@@ -84,7 +84,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Feature: BDD - BDD makes tests more readable\n'
                '  Story: Testing\n'
@@ -127,14 +127,14 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-       expect(formatter.output, 
+       expect(outputString.toString(), 
              '-----------------------------------------------------------------------------------------\n'
              'Feature: BDD - BDD makes tests more readable\n'
              '  Scenario: This is readable\n'
              '    Given are some data\n'
              '    When I change some data\n'
-             '    Than I check the changed data1: true\n'
-             '      And I check the unchanged data2: true\n'
+             '    Than I check the changed data1: SUCCESS\n'
+             '      And I check the unchanged data2: SUCCESS\n'
              '\n'
              'Features: 0 of 1 are failed ()\n'
              'Stories: 0 of 0 are failed ()\n'
@@ -151,7 +151,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Feature: BDD - BDD makes tests more readable\n'
                '  Feature: Story - A Story is a sub feature of BDD\n'
@@ -192,7 +192,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Feature: BDD - BDD makes tests more readable\n'
                '  Story: Testing\n'
@@ -206,8 +206,8 @@ main() {
                '  Scenario: This is readable\n'
                '    Given are some data\n'
                '    When I change some data\n'
-               '    Than I check the changed data1: true\n'
-               '      And I check the unchanged data2: true\n'
+               '    Than I check the changed data1: SUCCESS\n'
+               '      And I check the unchanged data2: SUCCESS\n'
                '\n'
                'Features: 0 of 2 are failed ()\n'
                'Stories: 0 of 1 are failed ()\n'
@@ -242,7 +242,7 @@ main() {
       var future = feature.run();
       
       return future.whenComplete(() {
-        expect(formatter.output, 
+        expect(outputString.toString(), 
                '-----------------------------------------------------------------------------------------\n'
                'Feature: BDD - BDD makes tests more readable\n'
                '  Story: Testing\n'
@@ -253,8 +253,8 @@ main() {
                '    Scenario: This is readable\n'
                '      Given are some data\n'
                '      When I change some data\n'
-               '      Than I check the changed data1: true\n'
-               '        And I check the unchanged data2: true\n'
+               '      Than I check the changed data1: SUCCESS\n'
+               '        And I check the unchanged data2: SUCCESS\n'
                '\n'
                '\n'
                'Features: 0 of 1 are failed ()\n'
