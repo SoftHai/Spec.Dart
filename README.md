@@ -29,6 +29,8 @@ import 'package:spec_dart/spec_dart.dart
 
 Example
 =========
+Here you find an article about TDD / BDD with Spec.Dart: [Article](/doc/Article_TDDExample.md) 
+
 ```dart
 // Change the language of your output (default EN) (EN and DE are supported)
 SpecContext.language = SpecLanguage.en;
@@ -94,7 +96,7 @@ Scenarios: 0 of 1 are failed ()
 -----------------------------------------------------------------------------------------
 ```
 HTML output example:
-[HTMLExample](https://github.com/SoftHai/Spec.Dart/blob/master/doc/img/ExampleHtmlOutput.png)
+[HTMLExample](/doc/img/ExampleHtmlOutput.png)
 
 Doc
 =========
