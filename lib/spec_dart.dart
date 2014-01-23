@@ -12,3 +12,8 @@ part 'src/feature.dart';
 part 'src/story.dart';
 part 'src/scenario.dart';
 part 'src/steps.dart';
+
+part 'src/Benchmark/suite.dart';
+part 'src/Benchmark/benchmark.dart';
+part 'src/Benchmark/bench_context.dart';
+part 'src/Benchmark/measure.dart';

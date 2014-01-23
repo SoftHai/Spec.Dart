@@ -12,6 +12,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 - Add `success`to `failed` to the `SpecLanguage` interface
 --------------------------------------------------------------
 
+- **(NEW)**: Add Classses for Benchmark
 - **(IMP)**: Add a output function to the construtor of the class `TextOutputFormatter`, to change the default output from console to what ever you need
 - **(IMP)**: Changed Senario Than result test from `true`/`false` to `SUCCESS`/`FAILED` and made than translatable
 
