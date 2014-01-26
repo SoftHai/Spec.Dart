@@ -1,11 +1,11 @@
-#OutputFormatter
+#SpecOutputFormatter
 
 You can change the output formatter for the Spec.Dart run-output.
 By default Spec.Dart outputs to the console. Which is great for IDE testing and the most build-servers.
 
 But if you want to work with the results (e.g. setting a build to successful or fail, or to include the result to a buildserver mail, ...) you will perhaps need an different format (e.g. XML)
  
-##Switching the OutputFormatter
+##Switching the SpecOutputFormatter
 
 You can switch the output formatter by assigning a different formatter to the property `SpecContext.output`.
 
@@ -30,12 +30,12 @@ I did this this way to have no dependancy to the IO framework. You can do in the
 
 In the upper example I output the content to the console.
 
-##Creating own OutputFormatter
+##Creating own SpecOutputFormatter
 
-You can create own output formatter by inherit from the class `OutputFormatter`.
+You can create own output formatter by inherit from the class `SpecOutputFormatter`.
 
 ```dart
-class ExampleOutputFormatter implements OutputFormatter {
+class ExampleOutputFormatter implements SpecOutputFormatter {
 
   void incIntent();
   void decIntent();
@@ -53,4 +53,4 @@ class ExampleOutputFormatter implements OutputFormatter {
 
 ##Contribute
 
-If you create new output ofrmatter which could be interesting for other users, too. Than it would be greate if you would return your code to the project.
+If you create new output formatter which could be interesting for other users, too. Than it would be greate if you would return your code to the project.

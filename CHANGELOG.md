@@ -8,11 +8,12 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 
 **Breaking Changes**
 --------------------------------------------------------------
+- Renamed `OutputFormatter` to `SpecOutputFormatter`
 - Renamed `ConsoleOutputFormatter`to `TextOutputFormatter`
 - Add `success`to `failed` to the `SpecLanguage` interface
 --------------------------------------------------------------
 
-- **(NEW)**: Add Classses for Benchmark
+- **(NEW)**: Add [Bench.Dart](/doc/BenchDart.md). A lib for Benchmarks
 - **(IMP)**: Add a output function to the construtor of the class `TextOutputFormatter`, to change the default output from console to what ever you need
 - **(IMP)**: Changed Senario Than result test from `true`/`false` to `SUCCESS`/`FAILED` and made than translatable
 

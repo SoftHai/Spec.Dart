@@ -1,7 +1,7 @@
 part of softhai.spec_dart;
 
 
-abstract class OutputFormatter {
+abstract class SpecOutputFormatter {
   
   static const String MESSAGE_TYPE_NONE = "N";
   static const String MESSAGE_TYPE_FAILURE = "F";
@@ -10,8 +10,17 @@ abstract class OutputFormatter {
   void incIntent();
   void decIntent();
   
-  void SpecStart();
-  void SpecEnd();
+  void specStart();
+  void specEnd();
+  
+  void startFeature();
+  void endFeature();
+  
+  void startStory();
+  void endStory();
+  
+  void startScenario();
+  void endScenario();
   
   void writeEmptyLine();
   void writeMessage(String message, [String type = MESSAGE_TYPE_NONE]);
@@ -22,7 +31,7 @@ abstract class OutputFormatter {
 
 typedef void TextOutput(String object);
 
-class TextOutputFormatter implements OutputFormatter {
+class TextOutputFormatter implements SpecOutputFormatter {
   
   String _indent = "  ";
   String _currentIntent = "";
@@ -38,17 +47,26 @@ class TextOutputFormatter implements OutputFormatter {
     this._currentIntent = this._currentIntent.replaceFirst(SpecContext.indent, "");
   }
   
-  void SpecStart() {
+  void specStart() {
     this._outputFunc("-----------------------------------------------------------------------------------------");
   }
   
-  void SpecEnd() {
+  void specEnd() {
     this._outputFunc("-----------------------------------------------------------------------------------------");
   }
+  
+  void startFeature() {}
+  void endFeature() {}
+  
+  void startStory() {}
+  void endStory() {}
+  
+  void startScenario() {}
+  void endScenario() {}
   
   void writeEmptyLine() => this._outputFunc("");
-  void writeMessage(String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE]) => this._outputFunc(_currentIntent + message);
-  void writeSpec(String keyword, String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE])  => this._outputFunc(_currentIntent + keyword + message);
+  void writeMessage(String message, [String type = SpecOutputFormatter.MESSAGE_TYPE_NONE]) => this._outputFunc(_currentIntent + message);
+  void writeSpec(String keyword, String message, [String type = SpecOutputFormatter.MESSAGE_TYPE_NONE])  => this._outputFunc(_currentIntent + keyword + message);
   
   void writeExampleData(List<Map<String, Object>> exampleData, List<Object> results) {
     
@@ -84,7 +102,7 @@ class TextOutputFormatter implements OutputFormatter {
 
 typedef void HtmlOutput(String htmlContent);
 
-class HtmlOutputFormatter implements OutputFormatter {
+class HtmlOutputFormatter implements SpecOutputFormatter {
   
   StringBuffer _content = new StringBuffer();
   HtmlOutput _outputFunc;
@@ -100,7 +118,7 @@ class HtmlOutputFormatter implements OutputFormatter {
     this._currentIntent -= 1;
   }
   
-  void SpecStart() {
+  void specStart() {
     this._content.writeln("""
           <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
                                     "http://www.w3.org/TR/html4/loose.dtd">
@@ -119,7 +137,7 @@ class HtmlOutputFormatter implements OutputFormatter {
             <body>""");
   }
   
-  void SpecEnd() {
+  void specEnd() {
     this._content.writeln("""</body>
                       </html>""");
     
@@ -129,20 +147,29 @@ class HtmlOutputFormatter implements OutputFormatter {
     }
   }
   
+  void startFeature() {}
+  void endFeature() {}
+  
+  void startStory() {}
+  void endStory() {}
+  
+  void startScenario() {}
+  void endScenario() {}
+  
   void writeEmptyLine() => print("<br>");
   
-  void writeMessage(String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE]) {
+  void writeMessage(String message, [String type = SpecOutputFormatter.MESSAGE_TYPE_NONE]) {
     this._addIntents();
     this._content.writeln("<span class='message'>$message</span><br>");
   }
-  void writeSpec(String keyword, String message, [String type = OutputFormatter.MESSAGE_TYPE_NONE]) {
+  void writeSpec(String keyword, String message, [String type = SpecOutputFormatter.MESSAGE_TYPE_NONE]) {
     this._addIntents();
     this._content.write("<span class='keyword'>$keyword</span>");
     switch (type) {
-      case OutputFormatter.MESSAGE_TYPE_FAILURE:
+      case SpecOutputFormatter.MESSAGE_TYPE_FAILURE:
         this._content.writeln("<span class='message failure'>$message</span><br>");
         break;
-      case OutputFormatter.MESSAGE_TYPE_SUCCESS:
+      case SpecOutputFormatter.MESSAGE_TYPE_SUCCESS:
         this._content.writeln("<span class='message success'>$message</span><br>");
         break;
       default:

@@ -2,6 +2,8 @@ part of softhai.spec_dart;
 
 abstract class BenchContext {
   
+  static BenchOutputFormatter output = new TextBenchOutputFormatter();
+  
   Map<String, dynamic> data;
   
 }

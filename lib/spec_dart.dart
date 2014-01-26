@@ -16,4 +16,5 @@ part 'src/steps.dart';
 part 'src/Benchmark/suite.dart';
 part 'src/Benchmark/benchmark.dart';
 part 'src/Benchmark/bench_context.dart';
+part 'src/Benchmark/bench_output_formatter.dart';
 part 'src/Benchmark/measure.dart';

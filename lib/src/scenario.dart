@@ -42,6 +42,7 @@ class Scenario extends SpecBase {
   
   Future<bool> _internalRun(_SpecContextImpl context) {
     
+    SpecContext.output.startScenario();
     SpecContext.output.writeSpec("${SpecContext.language.scenario}", ": ${this.title}");
     
     Future future = null;
@@ -99,6 +100,8 @@ class Scenario extends SpecBase {
     return future.then((_) {
       return results.where((r) => r == false).length == 0;
     }).whenComplete(() {
+      SpecContext.output.endScenario();
+      
       var successful = results.where((r) => r == false).length == 0;
       var stat = new SpecStatistics.current();
       stat.executedScenarios++;

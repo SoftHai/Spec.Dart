@@ -23,6 +23,7 @@ class Story  extends SpecBase {
     
     var results = new List<bool>();
 
+    SpecContext.output.startStory();
     SpecContext.output.writeSpec("${SpecContext.language.story}", ": ${this.title}");
     SpecContext.output.incIntent();
     SpecContext.output.writeSpec("${SpecContext.language.asA}", " ${this.asA}");
@@ -38,6 +39,7 @@ class Story  extends SpecBase {
       .whenComplete(() {
         SpecContext.output.decIntent();
         SpecContext.output.writeEmptyLine();
+        SpecContext.output.endStory();
         
         var successful = results.where((r) => r == false).length == 0;
         var stat = new SpecStatistics.current();

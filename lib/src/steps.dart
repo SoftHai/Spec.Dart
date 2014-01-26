@@ -70,7 +70,7 @@ class _StepChainImpl implements StepChain {
         if(!silent) {
           var successText = success ? SpecContext.language.success : SpecContext.language.failed;
           SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $successText", 
-              success ? OutputFormatter.MESSAGE_TYPE_SUCCESS : OutputFormatter.MESSAGE_TYPE_FAILURE); 
+              success ? SpecOutputFormatter.MESSAGE_TYPE_SUCCESS : SpecOutputFormatter.MESSAGE_TYPE_FAILURE); 
         }
       }
       else
@@ -83,14 +83,14 @@ class _StepChainImpl implements StepChain {
       .catchError((testFailure) {
       if(!silent) {
         var errorMessage = "Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}";
-        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", OutputFormatter.MESSAGE_TYPE_FAILURE);
+        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
       }
     }, test: (ex) => ex is TestFailure)
     
       .catchError((ex) {
       if(!silent) {
         var errorMessage = "Exception($ex)";
-        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", OutputFormatter.MESSAGE_TYPE_FAILURE);
+        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
       }
     }, test: (ex) => !(ex is TestFailure));
 

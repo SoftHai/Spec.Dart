@@ -29,7 +29,7 @@ abstract class SpecBase {
   Future<bool> _runImpl([bool isSubUnit = false]) {
     
     if(!isSubUnit) {
-      SpecContext.output.SpecStart();
+      SpecContext.output.specStart();
       SpecStatistics.Clear();
     }
     
@@ -43,14 +43,14 @@ abstract class SpecBase {
       var stat = new SpecStatistics.current();
       if(!isSubUnit) {
         SpecContext.output.writeStatistics(stat);
-        SpecContext.output.SpecEnd();
+        SpecContext.output.specEnd();
       }
     }).catchError((testFailure) {
-        SpecContext.output.writeMessage("Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}", OutputFormatter.MESSAGE_TYPE_FAILURE);
+        SpecContext.output.writeMessage("Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
     }, test: (ex) => ex is TestFailure)
     
       .catchError((ex) {
-        SpecContext.output.writeMessage("Exception($ex)", OutputFormatter.MESSAGE_TYPE_FAILURE);
+        SpecContext.output.writeMessage("Exception($ex)", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
     }, test: (ex) => !(ex is TestFailure));
 
   }
@@ -95,6 +95,7 @@ class Feature extends SpecBase {
     
     var results = new List<bool>();
 
+    SpecContext.output.startFeature();
     SpecContext.output.writeSpec("${SpecContext.language.feature}",": ${this.name} - ${this.description}");
     SpecContext.output.incIntent();
     
@@ -106,6 +107,7 @@ class Feature extends SpecBase {
       .whenComplete(() {
       SpecContext.output.decIntent();
       SpecContext.output.writeEmptyLine();
+      SpecContext.output.endFeature();
       
       var successful = results.where((r) => r == false).length == 0;
       var stat = new SpecStatistics.current();

@@ -31,11 +31,13 @@ class _SuiteImpl implements Suite {
   
   Future run() {
     
+    BenchContext.output.startSuite();
+    
     return Future.forEach(benches, (bench) {
       
       return bench.run();
       
-    });
+    }).whenComplete(() => BenchContext.output.endSuite());
     
   }
   
