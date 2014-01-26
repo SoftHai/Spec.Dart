@@ -6,7 +6,7 @@ import 'package:spec_dart/spec_dart.dart';
 main() {
   
   StringBuffer outputString = new StringBuffer();
-  SpecContext.output = new TextOutputFormatter(printFunc: (o) => outputString.writeln(o));
+  SpecContext.output = new TextSpecOutputFormatter(printFunc: (o) => outputString.writeln(o));
   
   featureTests.tests(outputString);
   storyTests.tests(outputString);
