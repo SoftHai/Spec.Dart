@@ -1,17 +1,19 @@
 #Changelog
 ```
-Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
+DateFormat: DD.MM.YYYY
+Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (e.g. Breaking Changes)
 ```
 
 ##Version 0.3.0-beta
-**Release date: *not released* **
+**Release date: *26.01.2014* **
 
-**Breaking Changes**
 --------------------------------------------------------------
-- Renamed `OutputFormatter` to `SpecOutputFormatter`
-- Renamed `ConsoleOutputFormatter`to `TextSpecOutputFormatter`
-- Renamed `HtmlOutputFormatter`to `HtmlSpecOutputFormatter`
-- Add `success`to `failed` to the `SpecLanguage` interface
+- **(!!!) Renamed `OutputFormatter` to `SpecOutputFormatter`**
+- **(!!!) Renamed `ConsoleOutputFormatter`to `TextSpecOutputFormatter`**
+- **(!!!) Renamed `HtmlOutputFormatter`to `HtmlSpecOutputFormatter`**
+- **(!!!) Add `success` and `failed` to the `SpecLanguage` interface**
+- **(!!!) Add some functions to the `SpecOutputFormatter` interface**
+
 --------------------------------------------------------------
 
 - **(NEW)** Add [Bench.Dart](/doc/BenchDart.md). A lib for Benchmarks
