@@ -5,6 +5,8 @@ class Scenario extends SpecBase {
   _StepChainImpl _givenSteps;
   _StepChainImpl _whenSteps;
   _StepChainImpl _thanSteps;
+  bool _thanThrows = false;
+  Type _thanThrowsExceptionType = null;
   List<Map<String, Object>> _exampleData;
   SpecFunc _exampleSetUp;
   SpecFunc _exampleTearDown;
@@ -26,6 +28,15 @@ class Scenario extends SpecBase {
   StepChain than({String text, SpecFunc func}) {
     this._thanSteps = new _StepChainImpl(new _Step(func, text));
     return this._thanSteps;
+  }
+  
+  void thanThrows() {
+    this._thanThrows = true;
+  }
+  
+  void thanThrowsA(Type exceptionType) {
+    this._thanThrows = true;
+    this._thanThrowsExceptionType = exceptionType;
   }
   
   void example(List<Map<String, Object>> data) {
@@ -52,27 +63,55 @@ class Scenario extends SpecBase {
       // Print steps
       if (this._givenSteps != null) this._givenSteps.printSteps(SpecContext.language.given);
       if (this._whenSteps != null) this._whenSteps.printSteps(SpecContext.language.when);
-      this._thanSteps.printSteps(SpecContext.language.than);
-
+      
+      if(this._thanThrows) {
+        SpecContext.output.incIntent();
+        SpecContext.output.writeSpec(SpecContext.language.than, " throws an exception");
+        SpecContext.output.decIntent();
+      }
+      else {
+        this._thanSteps.printSteps(SpecContext.language.than);
+      }
+      
+      
       // Execute Example Data
       future = Future.forEach(this._exampleData, (data) {
         
         var contextCopy = new _SpecContextImpl._clone(context);
         contextCopy.data.addAll(data);
         
-        return new Future.sync(() {
+        var innerFuture = new Future.sync(() {
           if(this._exampleSetUp != null) return this._exampleSetUp(contextCopy);
         }).then((_) {
-          if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, contextCopy, false, true);
+          if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, contextCopy, validate: false, silent: true);
         }).then((_) {
-          if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, false, true);
+          if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, contextCopy, validate: false, silent: true, ignoreExceptions: this._thanThrows);
         }).then((_) {
-          return this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, true, true)
-                           .then((result) => results.add(result))
-                           .catchError((_) => results.add(false));
+          if(this._thanThrows) {
+            results.add(false);
+          }
+          else {
+            return this._thanSteps.executeSteps(SpecContext.language.than, contextCopy, validate: true, silent: true)
+                             .then((result) => results.add(result))
+                             .catchError((_) => results.add(false));
+          }
         }).then((_) {
           if(this._exampleTearDown != null) return this._exampleTearDown(contextCopy);
         });
+        
+        if(this._thanThrows) {
+          innerFuture = innerFuture.catchError((ex) { 
+              if(this._thanThrowsExceptionType == null || this._thanThrowsExceptionType == ex.runtimeType) {
+                results.add(true); 
+              }
+              else {
+                results.add(false); 
+              }
+            });
+        }
+        
+        return innerFuture;
+        
       }).whenComplete(() {
         SpecContext.output.incIntent();
         SpecContext.output.writeSpec(SpecContext.language.example, "");
@@ -84,17 +123,41 @@ class Scenario extends SpecBase {
     }
     else {
       future = new Future.sync(() {
-        if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, context, false);
+        if (this._givenSteps != null) return this._givenSteps.executeSteps(SpecContext.language.given, context, validate: false);
       }).then((_) {
-        if (this._whenSteps != null) return this._whenSteps.executeSteps(SpecContext.language.when, context, false);
-      }).then((_) {
-        if (this._thanSteps != null) {
-          return this._thanSteps.executeSteps(SpecContext.language.than, context, true).then((result) => results.add(result));
+        if (this._whenSteps != null) {
+          if (this._thanThrows) this._whenSteps.printSteps(SpecContext.language.when);
+          return this._whenSteps.executeSteps(SpecContext.language.when, context, validate: false, ignoreExceptions: this._thanThrows);
+        }
+      }).then((value) {
+        if(this._thanThrows) {
+          SpecContext.output.incIntent();
+          SpecContext.output.writeSpec(SpecContext.language.than, " expected future to fail, but succeeded with '$value'.", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
+          SpecContext.output.decIntent();
+          results.add(false);
+        }
+        else if (this._thanSteps != null) {
+          return this._thanSteps.executeSteps(SpecContext.language.than, context, validate: true).then((result) => results.add(result));
         }
         else {
           results.add(false);
         }
       });
+      
+      if(this._thanThrows) {
+        future = future.catchError((ex) { 
+          SpecContext.output.incIntent();
+          if(this._thanThrowsExceptionType == null || this._thanThrowsExceptionType == ex.runtimeType) {
+            SpecContext.output.writeSpec(SpecContext.language.than, " throws exception: $ex", SpecOutputFormatter.MESSAGE_TYPE_SUCCESS);
+            results.add(true); 
+          }
+          else {
+            SpecContext.output.writeSpec(SpecContext.language.than, " expect '${this._thanThrowsExceptionType}' but was '${ex.runtimeType}'", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
+            results.add(false); 
+          }
+          SpecContext.output.decIntent();
+        });
+      }
     }
     
     return future.then((_) {

@@ -5,6 +5,8 @@ import 'package:unittest/unittest.dart';
 main() { 
   StringBuffer outputString = new StringBuffer();
   SpecContext.output = new TextOutputFormatter(printFunc: (o) => outputString.writeln(o));
+  
+  tests(outputString);
 }
 
 tests(StringBuffer outputString) {
@@ -297,6 +299,90 @@ tests(StringBuffer outputString) {
       });
     });
     
+    test("- Test - When-ThanThrows - Throws exception", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..when(text: "make a mad call", func: (context) => throw "Expected Demo Exception")
+              ..thanThrows();
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  When make a mad call\n'
+               '  Than throws exception: Expected Demo Exception\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+ 
+    test("- Test - When-ThanThrows - Throws no Exception", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..when(text: "make a good call", func: (context) => true)
+              ..thanThrows();
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  When make a good call\n'
+               '  Than expected future to fail, but succeeded with \'true\'.\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 1 of 1 are failed (Scenario Title)\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+    
+    test("- Test - When-ThanThrowsA - Throws exception", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..when(text: "make a mad call", func: (context) => throw new TestFailure("Expected Demo Exception"))
+              ..thanThrowsA(TestFailure);
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  When make a mad call\n'
+               '  Than throws exception: Expected Demo Exception\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+    
+    test("- Test - When-ThanThrowsA - Throws wrong exception", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..when(text: "make a mad call", func: (context) => throw new Exception("Expected Demo Exception"))
+              ..thanThrowsA(TestFailure);
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  When make a mad call\n'
+               '  Than expect \'TestFailure\' but was \'_ExceptionImplementation\'\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 1 of 1 are failed (Scenario Title)\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+    
     test("- Test - Than with example data", () {
       var scenario = new Scenario("Scenario Title");
       scenario..than(text: "happens something with examples", func: (context) => context.data["Expected"])
@@ -317,6 +403,33 @@ tests(StringBuffer outputString) {
                'Features: 0 of 0 are failed ()\n'
                'Stories: 0 of 0 are failed ()\n'
                'Scenarios: 1 of 1 are failed (Scenario Title)\n'
+               '-----------------------------------------------------------------------------------------\n'
+               '');
+      });
+    });
+    
+    test("- Test - When-ThanThrows - with example data - Throws exception", () {
+      var scenario = new Scenario("Scenario Title");
+      scenario..when(text: "make a mad call", func: (context) => throw "Expected Demo Exception")
+              ..thanThrows()
+              ..example([{ "Data1": 1, "Data2": 2 },
+                         { "Data1": 3, "Data2": 4 }]);
+      
+      var future = scenario.run();
+      
+      return future.whenComplete(() {
+        expect(outputString.toString(), 
+               '-----------------------------------------------------------------------------------------\n'
+               'Scenario: Scenario Title\n'
+               '  When make a mad call\n'
+               '  Than throws an exception\n'
+               '  Example\n'
+               '    | Data1 | Data2 | TestResult |\n'
+               '    | 1 | 2 | SUCCESS |\n'
+               '    | 3 | 4 | SUCCESS |\n'
+               'Features: 0 of 0 are failed ()\n'
+               'Stories: 0 of 0 are failed ()\n'
+               'Scenarios: 0 of 1 are failed ()\n'
                '-----------------------------------------------------------------------------------------\n'
                '');
       });

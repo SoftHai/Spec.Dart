@@ -37,18 +37,18 @@ class _StepChainImpl implements StepChain {
     SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
   }
   
-  Future<bool> executeSteps(String prefix, _SpecContextImpl context, [bool validate = false, bool silent = false]) {
+  Future<bool> executeSteps(String prefix, _SpecContextImpl context, {bool validate: false, bool silent: false, bool ignoreExceptions: false}) {
         
     var results = new List<bool>();
 
     var future = new Future.sync(() {
       if(!silent) SpecContext.output.incIntent();
-      return this._executeStep(prefix, this._steps.first, context, validate, silent)
+      return this._executeStep(prefix, this._steps.first, context, validate, silent, ignoreExceptions)
                  .then((r) => results.add(r));
     }).then((_) {
         if(!silent) SpecContext.output.incIntent();
         return Future.forEach(this._steps.skip(1), (step) {
-          return this._executeStep(SpecContext.language.and, step, context, validate, silent)
+          return this._executeStep(SpecContext.language.and, step, context, validate, silent, ignoreExceptions)
                      .then((r) => results.add(r));
         });
     }).then((_) => results.where((r) => r != true).length == 0)
@@ -60,9 +60,9 @@ class _StepChainImpl implements StepChain {
     return future;
   }
 
-  Future<bool> _executeStep(String keyWord, _Step currentStep, _SpecContextImpl context, bool validate, bool silent) {
+  Future<bool> _executeStep(String keyWord, _Step currentStep, _SpecContextImpl context, bool validate, bool silent, bool ignoreExceptions) {
 
-    return new Future.sync(() { if(currentStep.func != null) return currentStep.func(context); })
+    var future = new Future.sync(() { if(currentStep.func != null) return currentStep.func(context); })
       .then((r) {
       var success = r != false;
       if(validate)
@@ -75,25 +75,27 @@ class _StepChainImpl implements StepChain {
       }
       else
       {
-        if(!silent) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
+        if(!silent && !ignoreExceptions) SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}"); 
       }
       
       return success;
-    })
-      .catchError((testFailure) {
-      if(!silent) {
-        var errorMessage = "Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}";
-        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
-      }
-    }, test: (ex) => ex is TestFailure)
+    });
     
-      .catchError((ex) {
-      if(!silent) {
-        var errorMessage = "Exception($ex)";
-        SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
-      }
-    }, test: (ex) => !(ex is TestFailure));
-
+    if(!ignoreExceptions) {
+      future = future.catchError((testFailure) {
+                if(!silent) {
+                  var errorMessage = "Exception(${testFailure.message.replaceAll("\n", "")})\n ${testFailure.stackTrace}";
+                  SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
+                }
+              }, test: (ex) => ex is TestFailure).catchError((ex) {
+                if(!silent) {
+                  var errorMessage = "Exception($ex)";
+                  SpecContext.output.writeSpec("$keyWord", " ${currentStep.text}: $errorMessage", SpecOutputFormatter.MESSAGE_TYPE_FAILURE);
+                }
+              }, test: (ex) => !(ex is TestFailure));
+    }
+    
+    return future;
   }
 }
 

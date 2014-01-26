@@ -5,6 +5,8 @@ import 'package:unittest/unittest.dart';
 main() { 
   StringBuffer outputString = new StringBuffer();
   SpecContext.output = new TextOutputFormatter(printFunc: (o) => outputString.writeln(o));
+  
+  tests(outputString);
 }
 
 tests(StringBuffer outputString) {
