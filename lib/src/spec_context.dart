@@ -2,7 +2,7 @@ part of softhai.spec_dart;
 
 // Public interface
 abstract class SpecContext {
-  static SpecOutputFormatter output = new TextOutputFormatter();
+  static SpecOutputFormatter output = new TextSpecOutputFormatter();
   static String indent = "  ";
   static SpecLanguage language = SpecLanguage.en;
   

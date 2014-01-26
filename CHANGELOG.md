@@ -9,13 +9,15 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix
 **Breaking Changes**
 --------------------------------------------------------------
 - Renamed `OutputFormatter` to `SpecOutputFormatter`
-- Renamed `ConsoleOutputFormatter`to `TextOutputFormatter`
+- Renamed `ConsoleOutputFormatter`to `TextSpecOutputFormatter`
+- Renamed `HtmlOutputFormatter`to `HtmlSpecOutputFormatter`
 - Add `success`to `failed` to the `SpecLanguage` interface
 --------------------------------------------------------------
 
-- **(NEW)**: Add [Bench.Dart](/doc/BenchDart.md). A lib for Benchmarks
-- **(IMP)**: Add a output function to the construtor of the class `TextOutputFormatter`, to change the default output from console to what ever you need
-- **(IMP)**: Changed Senario Than result test from `true`/`false` to `SUCCESS`/`FAILED` and made than translatable
+- **(NEW)** Add [Bench.Dart](/doc/BenchDart.md). A lib for Benchmarks
+- **(IMP)** Add a output function to the construtor of the class `TextOutputFormatter`, to change the default output from console to what ever you need
+- **(IMP)** Changed Senario Than result test from `true`/`false` to `SUCCESS`/`FAILED` and made than translatable
+- **(IMP)** (#7): Add `ThanThrows` and `ThanThrowsA` method to 'Scenario`
 
 ##Version 0.2.0-beta
 **Release date: *16.01.2014* **

@@ -13,11 +13,11 @@ The following output formatter are supported:
 * **TextOutputFormatter**: This is the default output formatter and logs, by default, all outputs to the console.
 * **HtmlOutputFormatter**: This is an output formatter which creates a HTML document.
 
-###HtmlOutputFormatter
+###HtmlSpecOutputFormatter
 
-You can switch to the HtmlOutputFormatter by assigning an istance to the `SpecContext.output` property:
+You can switch to the HtmlSpecOutputFormatter by assigning an istance to the `SpecContext.output` property:
 ```dart
-SpecContext.output = new HtmlOutputFormatter((m) => print(m));
+SpecContext.output = new HtmlSpecOutputFormatter((m) => print(m));
 ```
 
 As parameter in the constructor you have to insert an function. This function will be called at the end of the spec run and gives to the content (string) of the HTML file.

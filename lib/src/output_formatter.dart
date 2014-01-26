@@ -31,13 +31,13 @@ abstract class SpecOutputFormatter {
 
 typedef void TextOutput(String object);
 
-class TextOutputFormatter implements SpecOutputFormatter {
+class TextSpecOutputFormatter implements SpecOutputFormatter {
   
   String _indent = "  ";
   String _currentIntent = "";
   TextOutput _outputFunc = print;
   
-  TextOutputFormatter({String intent: "  ", TextOutput printFunc: print}) : this._indent = intent, this._outputFunc = printFunc;
+  TextSpecOutputFormatter({String intent: "  ", TextOutput printFunc: print}) : this._indent = intent, this._outputFunc = printFunc;
   
   void incIntent() {
     this._currentIntent += SpecContext.indent;
@@ -102,13 +102,13 @@ class TextOutputFormatter implements SpecOutputFormatter {
 
 typedef void HtmlOutput(String htmlContent);
 
-class HtmlOutputFormatter implements SpecOutputFormatter {
+class HtmlSpecOutputFormatter implements SpecOutputFormatter {
   
   StringBuffer _content = new StringBuffer();
   HtmlOutput _outputFunc;
   int _currentIntent = 0;
   
-  HtmlOutputFormatter(this._outputFunc);
+  HtmlSpecOutputFormatter(this._outputFunc);
   
   void incIntent() {
     this._currentIntent += 1;

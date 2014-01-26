@@ -75,6 +75,8 @@ The `Scenario` contains the tests of the application. A Scenario describes a use
 * **Given**: "Given is a logged out user" *(initial situation / precondition)*
 * **When**: "When a user logging in with valid login data" *(an action / event which happens)*
 * **Than**: "Than the user is logged in" *(the result / situation / state after the action / event)*
+* **ThenThrows**: Expect that the *When* part throws any excaption
+* **ThenThrowsA**: Expect that the *When* part throws a defined exception
 
 You can create 2 types of scenarios:
 * Single Executing Scenarios
@@ -95,6 +97,10 @@ story1.scenario("Login Test - Valid")
 
        ..than(text: "the user is Logged in",
               func: (context) => context.data["ctrl"].isLogin);
+      // OR
+      ..thanThrows();
+      // OR
+      ..thanThrowsA(TestException);
 ```
 This tests will login with the valid data (user: "Soft" / pw: "Hai").
 
@@ -154,6 +160,23 @@ Additional to the normal `setUp` and a `tearDown` functions, Scenario support 2 
          ..exampleTearDown((context) {
          	// Example TearDown code here
          });
+```
+
+###Expecting an Exception during the When executing
+
+Alterbative to the `Then` part you can define that the `When` throws an exception. You can do that with the methods `ThenThrows()` or `ThenThrowsA(Type)`:
+
+```dart
+story1.scenario("Login Test - Valid")
+       ..given(text: "is a login controller",
+               func: (context) => context.data["ctrl"] =  new LoginController())
+
+       ..when(text: "a user insert invalid login data (user: ABC / password: XYZ)",
+              func: (context) => context.data["ctrl"].login("ABC", "XYZ"))
+
+      ..thenThrows();
+      // OR
+      ..thenThrowsA(LoginException); // Throws an LoginException
 ```
 
 #Executing Tests

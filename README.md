@@ -41,7 +41,7 @@ Here you can find an article about TDD / BDD with Spec.Dart: [Article](/doc/Arti
 SpecContext.language = SpecLanguage.en;
 
 // Change the output formatter (default is console print) (Console and HTML are supported)
-SpecContext.output = new HtmlOutputFormatter((m) => print(m));
+SpecContext.output = new HtmlSpecOutputFormatter((m) => print(m));
 
 // Create Features
 var feature = new Feature("UserManagement", "With this feature, user can have an account to protect here data");
@@ -149,7 +149,7 @@ Doc
 Here you can find the framework documentation:
 * [Spec.Dart](/doc/SpecDart.md)
  * [Translation](/doc/Translation.md)
- * [SpecOutputFormatter](/doc/OutputFormatter.md)
+ * [SpecOutputFormatter](/doc/SpecOutputFormatter.md)
 
 * [Bench.Dart](/doc/BenchDart.md)
  * BenchOutputFormatter
@@ -164,7 +164,4 @@ Roadmap
 
 * Improving
 * Bugfixing
-
-**Stable Version**
-
 * New Feature
