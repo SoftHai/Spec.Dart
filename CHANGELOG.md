@@ -5,7 +5,7 @@ Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (
 ```
 
 ##Version 0.3.1-beta
-**Release date: *not released* **
+**Release date: *29.01.2014* **
 
 --------------------------------------------------------------
 - **(!!!) Changed optional parameter of function `Bench` from positional to named**
