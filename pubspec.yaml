@@ -1,6 +1,6 @@
 name: spec_dart
 author: SoftHai <softhai@gmx.de>
-version: 0.3.0-beta
+version: 0.3.1-beta
 homepage: https://github.com/SoftHai/Spec.Dart
 description: Spec.Dart is an BDD Framework for testing dart applications
 documentation: https://github.com/SoftHai/Spec.Dart

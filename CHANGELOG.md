@@ -4,6 +4,18 @@ DateFormat: DD.MM.YYYY
 Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (e.g. Breaking Changes)
 ```
 
+##Version 0.3.1-beta
+**Release date: *not released* **
+
+--------------------------------------------------------------
+- **(!!!) Changed optional parameter of function `Bench` from positional to named**
+
+--------------------------------------------------------------
+
+- **(IMP)** Changed postional to named parameter in function `Bench` of object `Benchmark`
+- **(IMP)** Removed zeros measuring values from the result calculation
+- **(IMP)** Changed the output text of the results
+
 ##Version 0.3.0-beta
 **Release date: *26.01.2014* **
 

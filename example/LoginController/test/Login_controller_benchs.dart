@@ -14,14 +14,18 @@ void main() {
                                   context.data["ctrl"].login("Soft", "Hai");
                                   context.data["ctrl"].logoff();
                                 });
-                                }, "Delay")
+                                }, name: "Fix Delay")
                                ..bench((context) { 
                                   var rnd = new Random();
                                   return new Future.delayed(new Duration(milliseconds: rnd.nextInt(1000))).then((_) { // Simulate a run which need between 0 and 1000ms
                                     context.data["ctrl"].login("Soft", "Hai");
                                     context.data["ctrl"].logoff();
                                   });
-                                 }, "Random", 20);
+                                 }, name: "Random Delay", interations: 20)
+                              ..bench((context) { 
+                                context.data["ctrl"].login("Soft", "Hai");
+                                context.data["ctrl"].logoff();
+                              }, name: "No Delay", interations: 10000, unit: MICROSECONDS);
   
   suite.run();
 }

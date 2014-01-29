@@ -6,7 +6,7 @@ abstract class Benchmark {
   
   void setUp(BenchFunc func);
   
-  void bench(BenchFunc func, [String name, int interations, String unit = MILLISECONDS]);
+  void bench(BenchFunc func, {String name, int interations, String unit: MILLISECONDS});
   
   void tearDown(BenchFunc func);
   
@@ -29,11 +29,14 @@ class BenchResult {
   BenchResult(this.unit);
   
   add(int timeMS) {
-    this._times.add(timeMS);
+    if(timeMS > 0)
+    {
+      this._times.add(timeMS);
+    }
   }
   
   String toString() {
-    return "Avg: $avg$unit (runs '${this._times.length}' times, some values '${this._times.take(20).join(',')}')";
+    return "Avg: $avg$unit"; // (runs '${this._times.length}' times, some values '${this._times.take(20).join(',')}')";
   }
   
 }
@@ -64,7 +67,7 @@ class _BenchmarkImpl implements Benchmark {
     this._setUp = func;
   }
   
-  void bench(BenchFunc func, [String name, int interations, String unit = MILLISECONDS]) {
+  void bench(BenchFunc func, {String name, int interations, String unit: MILLISECONDS}) {
     if(name == null) name = "${this._benchInfos.length + 1}";
     if(interations == null) interations = this.interations;
     
