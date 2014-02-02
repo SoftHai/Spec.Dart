@@ -30,7 +30,7 @@ var suite = Suite.create();
 ```
 
 A `Suite` has the following members:
-* **interations**: Defines how often a benchmark should be executed (default is 10).
+* **interations**: Defines how often a benchmark should be executed (default is 3) - each interation takes at least 1 sec.
 * **add**: Add a new Benchmark to the suite.
 
 
@@ -51,9 +51,9 @@ void bench(BenchFunc func, [String name, int interations, String unit = MILLISEC
   ```
   parameters:
    * **name**: Add a costum name to each registered bench function.
-   * **interations**: overwrites the global defined interations number for this benchmark.
+   * **interations**: overwrites the global defined interations number for this benchmark. Each interation takes at least 1 sec.
    * **unit**: Defines the measured unit of the benchmark (default MILLISECONDS)
-   
+
 * **tearDown**: Pass a function to the benchmark which tear down the bench run (clean up resources).
 
 ###BenchContext

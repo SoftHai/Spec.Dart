@@ -2,19 +2,25 @@
 ```
 DateFormat: DD.MM.YYYY
 Legend: (NEW) New Feature - (IMP) Improvement - (FIX) Bugfix - (!!!) Attantion (e.g. Breaking Changes)
+
 ```
+
+##Version 0.3.2-beta
+**Release date: *02.02.2014* **
+
+- **(FIX)** Bench.Dart: Benchmark result was not comparable and not correct
 
 ##Version 0.3.1-beta
 **Release date: *29.01.2014* **
 
 --------------------------------------------------------------
-- **(!!!) Changed optional parameter of function `Bench` from positional to named**
+- **(!!!) Bench.Dart: Changed optional parameter of function `Bench` from positional to named**
 
 --------------------------------------------------------------
 
-- **(IMP)** Changed postional to named parameter in function `Bench` of object `Benchmark`
-- **(IMP)** Removed zeros measuring values from the result calculation
-- **(IMP)** Changed the output text of the results
+- **(IMP)** Bench.Dart: Changed postional to named parameter in function `Bench` of object `Benchmark`
+- **(IMP)** Bench.Dart: Removed zeros measuring values from the result calculation
+- **(IMP)** Bench.Dart: Changed the output text of the results
 
 ##Version 0.3.0-beta
 **Release date: *26.01.2014* **

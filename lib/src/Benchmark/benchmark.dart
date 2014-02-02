@@ -16,9 +16,9 @@ abstract class Benchmark {
 
 class BenchResult {
   
-  List<int> _times = new List<int>();
+  List<num> _times = new List<num>();
   double get avg => sum / _times.length;
-  int get sum {
+  num get sum {
     var sum = 0;
     for (var time in this._times) {
       sum += time;
@@ -28,7 +28,7 @@ class BenchResult {
   String unit;
   BenchResult(this.unit);
   
-  add(int timeMS) {
+  add(num timeMS) {
     if(timeMS > 0)
     {
       this._times.add(timeMS);
@@ -36,7 +36,7 @@ class BenchResult {
   }
   
   String toString() {
-    return "Avg: $avg$unit"; // (runs '${this._times.length}' times, some values '${this._times.take(20).join(',')}')";
+    return "Avg: $avg$unit (runs '${this._times.length}' times, some values '${this._times.take(20).map((time) => time.toStringAsFixed(1)).join(' , ')}')";
   }
   
 }
@@ -84,7 +84,7 @@ class _BenchmarkImpl implements Benchmark {
     
     if(this._benchInfos.length == 0) return null;
     var context = new _BenchContextImpl();
-    
+
     return new Future.sync(() { 
         if(this._setUp != null) return this._setUp(context); 
       }).then((_) => Future.forEach(_benchInfos, (benchinfo) {
@@ -94,7 +94,7 @@ class _BenchmarkImpl implements Benchmark {
       
       return Future.forEach(list, (bench) { 
         
-        return measure((_) => bench.bench(context), bench.unit).then((time) => 
+        return measure(() => bench.bench(context), unit: bench.unit).then((time) => 
             benchResult.add(time));
         
       }).then((_) => BenchContext.output.printBenchmarkResult(benchinfo.name, benchResult));
