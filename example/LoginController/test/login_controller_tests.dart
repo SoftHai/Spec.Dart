@@ -27,7 +27,7 @@ void main() {
    ..when(text: "a user insert valid login data (user: Soft / password: Hai)", 
           func: (context) => context.data["ctrl"].login("Soft", "Hai"))
           
-   ..than(text: "the user is Logged in", 
+   ..then(text: "the user is Logged in", 
           func: (context) => context.data["ctrl"].isLogin);
   
   story1.scenario("Login Test - Invalid")
@@ -37,7 +37,7 @@ void main() {
    ..when(text: "a user insert invalid login data (user: user / password: pw)", 
           func: (context) => context.data["ctrl"].login("user", "pw"))
           
-   ..than(text: "the user is not Logged in", 
+   ..then(text: "the user is not Logged in", 
           func: (context) => expect(context.data["ctrl"].isLogin, isTrue));
  
   story1.scenario("Login Test - Example Data")
@@ -47,7 +47,7 @@ void main() {
     ..when(text: "a user insert login data (user: [user] / password: [pw])", 
            func: (context) => context.data["ctrl"].login(context.data["user"], context.data["pw"]))
               
-    ..than(text: "the user is perhaps Logged in", 
+    ..then(text: "the user is perhaps Logged in", 
            func: (context) => expect(context.data["ctrl"].isLogin, context.data["successful"]))
   
     ..example([{ "user": "Soft", "pw": "Hai", "successful": true}, 

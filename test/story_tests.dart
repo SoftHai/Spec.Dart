@@ -105,7 +105,7 @@ tests(StringBuffer outputString) {
                  func: (context) {
                    context.data["data1"] = "data5";
                  })
-          ..than(text: "I check the changed data1", 
+          ..then(text: "I check the changed data1", 
                  func: (context) {
                    expect(context.data["data1"], "data5");
                    return true; 

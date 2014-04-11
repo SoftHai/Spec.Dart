@@ -27,7 +27,7 @@ main() {
                      func: (context) {
                        context.data["Result"] = context.data["UnitConv"].convert(context.data["sourceValue"], "°C", "°F");
                      })
-              ..than(text: "I got [destinationValue]",
+              ..then(text: "I got [destinationValue]",
                      func: (context) => expect(context.data["Result"], equals(context.data["destinationValue"])))
               ..example([{ "sourceValue": -10, "destinationValue": 14},
                          { "sourceValue": 0, "destinationValue": 32},
@@ -41,7 +41,7 @@ main() {
                       func: CreateUnitConverter_F_to_C)
               ..when(text: "I convert [sourceValue]°F to °C",
                      func: Convert_F_to_C)
-              ..than(text: "I got [destinationValue]",
+              ..then(text: "I got [destinationValue]",
                      func: Check_F_to_C)
               ..example([{ "sourceValue": 14, "destinationValue": -10},
                          { "sourceValue": 32, "destinationValue": 0},
@@ -63,7 +63,7 @@ main() {
                         context.data["UnitConv"] = unitConv;
                       })
               ..when(text: "I convert between invalid units (e.g. mm to °C)")
-              ..than(text: "A exception is thrown",
+              ..then(text: "A exception is thrown",
                      func: (context) => expect(() => context.data["UnitConv"].convert(200, "mm", "°C"), 
                                                throwsA(new isInstanceOf<UnitConvertException>()))); // expect a exception
   

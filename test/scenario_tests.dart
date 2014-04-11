@@ -219,7 +219,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than", () {
       var scenario = new Scenario("Scenario Title");
-      scenario.than(text: "happens something special", func: (context) => null);
+      scenario.then(text: "happens something special", func: (context) => null);
       
       var future = scenario.run();
       
@@ -238,7 +238,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than with exception", () {
       var scenario = new Scenario("Scenario Title");
-      scenario.than(text: "happens an exception", func: (context) => throw "Demo Exception");
+      scenario.then(text: "happens an exception", func: (context) => throw "Demo Exception");
       
       var future = scenario.run();
       
@@ -257,7 +257,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than with TestException", () {
       var scenario = new Scenario("Scenario Title");
-      scenario.than(text: "happens an exception", func: (context) =>expect(true, isFalse));
+      scenario.then(text: "happens an exception", func: (context) =>expect(true, isFalse));
       
       var future = scenario.run();
       
@@ -280,7 +280,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than-And", () {
       var scenario = new Scenario("Scenario Title");
-      scenario.than(text: "happens something special", func: (context) => false).
+      scenario.then(text: "happens something special", func: (context) => false).
                 and(text: "more special", func: (context) => true);
       
       var future = scenario.run();
@@ -302,7 +302,7 @@ tests(StringBuffer outputString) {
     test("- Test - When-ThanThrows - Throws exception", () {
       var scenario = new Scenario("Scenario Title");
       scenario..when(text: "make a mad call", func: (context) => throw "Expected Demo Exception")
-              ..thanThrows();
+              ..thenThrows();
       
       var future = scenario.run();
       
@@ -323,7 +323,7 @@ tests(StringBuffer outputString) {
     test("- Test - When-ThanThrows - Throws no Exception", () {
       var scenario = new Scenario("Scenario Title");
       scenario..when(text: "make a good call", func: (context) => true)
-              ..thanThrows();
+              ..thenThrows();
       
       var future = scenario.run();
       
@@ -344,7 +344,7 @@ tests(StringBuffer outputString) {
     test("- Test - When-ThanThrowsA - Throws exception", () {
       var scenario = new Scenario("Scenario Title");
       scenario..when(text: "make a mad call", func: (context) => throw new TestFailure("Expected Demo Exception"))
-              ..thanThrowsA(TestFailure);
+              ..thenThrowsA(TestFailure);
       
       var future = scenario.run();
       
@@ -365,7 +365,7 @@ tests(StringBuffer outputString) {
     test("- Test - When-ThanThrowsA - Throws wrong exception", () {
       var scenario = new Scenario("Scenario Title");
       scenario..when(text: "make a mad call", func: (context) => throw new Exception("Expected Demo Exception"))
-              ..thanThrowsA(TestFailure);
+              ..thenThrowsA(TestFailure);
       
       var future = scenario.run();
       
@@ -385,7 +385,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than with example data", () {
       var scenario = new Scenario("Scenario Title");
-      scenario..than(text: "happens something with examples", func: (context) => context.data["Expected"])
+      scenario..then(text: "happens something with examples", func: (context) => context.data["Expected"])
               ..example([{ "Data1": 1, "Data2": 2, "Expected": true},
                          { "Data1": 3, "Data2": 4, "Expected": false}]);
       
@@ -411,7 +411,7 @@ tests(StringBuffer outputString) {
     test("- Test - When-ThanThrows - with example data - Throws exception", () {
       var scenario = new Scenario("Scenario Title");
       scenario..when(text: "make a mad call", func: (context) => throw "Expected Demo Exception")
-              ..thanThrows()
+              ..thenThrows()
               ..example([{ "Data1": 1, "Data2": 2 },
                          { "Data1": 3, "Data2": 4 }]);
       
@@ -437,7 +437,7 @@ tests(StringBuffer outputString) {
     
     test("- Test - Than example data setup / teardown", () {
       var scenario = new Scenario("Scenario Title");
-      scenario..than(text: "happens something with examples", func: (context) => context.data["Expected"])
+      scenario..then(text: "happens something with examples", func: (context) => context.data["Expected"])
               ..example([{ "Data1": 1, "Data2": 2, "Expected": true},
                          { "Data1": 3, "Data2": 4, "Expected": false}])
               ..exampleSetUp((context) => SpecContext.output.writeMessage("SETUP"))
@@ -473,7 +473,7 @@ tests(StringBuffer outputString) {
                 .and(text: "something else", func: (context) => context.data["GivenData2"] = 2)
               ..when(text: "something happens", func: (context) => context.data["WhenData1"] = 2)
                 .and(text: "more happens", func: (context) => context.data["WhenData2"] = 3)
-              ..than(text: "check given data", func: (context) => context.data["GivenData1"] == 1 && context.data["GivenData2"] == 2)
+              ..then(text: "check given data", func: (context) => context.data["GivenData1"] == 1 && context.data["GivenData2"] == 2)
                 .and(text: "and when data", func: (context) => context.data["WhenData1"] == 2 && context.data["WhenData2"] == 3)
               ..tearDown((context) => SpecContext.output.writeMessage("TEARDOWN"));
       
@@ -507,7 +507,7 @@ tests(StringBuffer outputString) {
                 .and(text: "something else", func: (context) => new Future.delayed(new Duration(seconds: 3), () => context.data["Given2"] = ++context.data["CallCounter"]))
               ..when(text: "something happens", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["When1"] = ++context.data["CallCounter"]))
                 .and(text: "more happens", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["When2"] = ++context.data["CallCounter"]))
-              ..than(text: "do something", func: (context) => new Future.delayed(new Duration(seconds: 1), () => context.data["Than1"] = ++context.data["CallCounter"]))
+              ..then(text: "do something", func: (context) => new Future.delayed(new Duration(seconds: 1), () => context.data["Than1"] = ++context.data["CallCounter"]))
                 .and(text: "and more", func: (context) => new Future.delayed(new Duration(seconds: 1), () => context.data["Than2"] = ++context.data["CallCounter"]))
               ..tearDown((context) {
                   expect(context.data["Given1"], equals(1));
@@ -545,7 +545,7 @@ tests(StringBuffer outputString) {
             })..given(text: "is something", func: (context) => context.data["Given1"] = ++context.data["CallCounter"])
                 .and(text: "something else", func: (context) => context.data["Given2"] = ++context.data["CallCounter"])
               ..when(text: "something happens", func: (context) => new Future.delayed(new Duration(seconds: 5), () => context.data["When1"] = ++context.data["CallCounter"]))
-              ..than(text: "do something", func: (context) => context.data["Than1"] = ++context.data["CallCounter"])
+              ..then(text: "do something", func: (context) => context.data["Than1"] = ++context.data["CallCounter"])
               ..tearDown((context) {
                   expect(context.data["Given1"], equals(1));
                   expect(context.data["Given2"], equals(2));
@@ -578,7 +578,7 @@ tests(StringBuffer outputString) {
                 .and(text: "something else", func: (context) => context.data["GivenData2"] = 2)
               ..when(text: "something happens", func: (context) => context.data["WhenData1"] = 2)
                 .and(text: "more happens", func: (context) => context.data["WhenData2"] = 3)
-              ..than(text: "happens something with examples", func: (context) => context.data["Expected"])
+              ..then(text: "happens something with examples", func: (context) => context.data["Expected"])
                 .and(text: "and given data", func: (context) => context.data["GivenData1"] == 1 && context.data["GivenData2"] == 2)
                 .and(text: "and when data", func: (context) => context.data["WhenData1"] == 2 && context.data["WhenData2"] == 3)
               ..exampleSetUp((context) => SpecContext.output.writeMessage("example SETUP"))
@@ -625,7 +625,7 @@ tests(StringBuffer outputString) {
                 .and(text: "something else", func: (context) => context.data["GivenData2"] = 2)
               ..when(text: "something happens", func: (context) => context.data["WhenData1"] = 2)
                 .and(text: "more happens", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["WhenData2"] = 3)) //Async
-              ..than(text: "happens something with examples", func: (context) => context.data["Expected"])
+              ..then(text: "happens something with examples", func: (context) => context.data["Expected"])
                 .and(text: "and given data", func: (context) => new Future.delayed(new Duration(seconds: 2), () => context.data["GivenData1"] == 1 && context.data["GivenData2"] == 2)) //Async
                 .and(text: "and when data", func: (context) => context.data["WhenData1"] == 2 && context.data["WhenData2"] == 3)
               ..exampleSetUp((context) => new Future.delayed(new Duration(seconds: 2), () => SpecContext.output.writeMessage("example SETUP"))) //Async

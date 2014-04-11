@@ -39,6 +39,7 @@ class TextBenchOutputFormatter implements BenchOutputFormatter {
   }
   
   void startBenchmark(String name) {
+    print("");
     print(this._currentIntent + "Bench '$name'");
     this._incIntent();
   }

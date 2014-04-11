@@ -25,16 +25,16 @@ class Scenario extends SpecBase {
     return this._whenSteps;
   }
   
-  StepChain than({String text, SpecFunc func}) {
+  StepChain then({String text, SpecFunc func}) {
     this._thanSteps = new _StepChainImpl(new _Step(func, text));
     return this._thanSteps;
   }
   
-  void thanThrows() {
+  void thenThrows() {
     this._thanThrows = true;
   }
   
-  void thanThrowsA(Type exceptionType) {
+  void thenThrowsA(Type exceptionType) {
     this._thanThrows = true;
     this._thanThrowsExceptionType = exceptionType;
   }

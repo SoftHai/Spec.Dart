@@ -17,7 +17,7 @@ abstract class Suite {
 class _SuiteImpl implements Suite {
   
   List<Benchmark> benches = new List<Benchmark>();
-  int interationCount = 10;
+  int interationCount = 3;
   
   void interations(int count) {
     this.interationCount = count;
